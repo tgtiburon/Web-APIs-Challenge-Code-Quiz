@@ -1,0 +1,116 @@
+/*Global Variables */
+:root {
+    
+    /* --hero-height:400px; */
+
+    --color1: rgb(15,12,46);
+    --color2: rgb(29,35,120);
+    --color3: rgb(40,71,217);
+    --color4: rgb(88,165,245);
+    --color5: rgb(122,216,248); 
+    --color6: rgb(255,255,255); 
+    
+}
+
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+
+}
+body {
+    color:var(--color5);
+    font-family: Helvetica, Arial, Helvetica, sans-serif;
+    width: 100%;;
+}
+header {
+    background-color:var(--color2);
+   
+    width: 100%;
+    height: 3%;
+}
+header h1 {
+    /* display:flex; */
+    text-align: center;
+    
+    
+}
+header div {
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+    padding:1%;
+}
+.game-surface {
+    min-height: 87vh;
+    /* display:flex;
+    /* justify-content: space-evenly; */
+    /* flex-direction: column; */
+    /* align-items: center; */ */
+    
+}
+.game-surface>div{
+    display:flex;
+    flex-direction:column;
+    color: var(--color1);
+    padding-top:25%;
+    padding-left: 20%;
+    padding-right:20%;
+    align-items: center;
+  
+}
+.game-surface>div>h2 {
+    color:var(--color2);
+}
+
+
+
+
+
+footer {
+    position: absolute;
+    bottom:0;
+    width: 100%;
+    height: 3%;
+    background: var(--color2);
+    text-align: center;
+    font-size: 1vw;
+}
+
+
+
+
+/*Media Query for better mobile responsiveness */
+@media screen and (max-width: 980px) {
+
+    /* NO CHANGES NEEDED FOR THIS RESOLUTION */
+    
+    
+    
+    }/*980px breakpoint end */
+    @media screen and (max-width: 768px) {
+      
+     
+    
+    }/*768px breakpoint end */
+    
+    @media screen and (max-width: 575px) {
+
+        header h1 {
+            /* display:flex; */
+            text-align: center;
+            font-size: 7vw;
+            
+            
+        }
+
+
+
+
+
+        footer {
+            font-size: 4vw;
+        }
+       
+        
+    }/*575px breakpoint end */
