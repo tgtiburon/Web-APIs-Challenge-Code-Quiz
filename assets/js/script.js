@@ -13,30 +13,31 @@ let noAnswer = true;
 
 let currentQuestion = 0;
 let numCorrect = 0;
+let finalScore = 0;
 
-let savedScores = [
+/* let savedScores = [
     {
-        Name: "Player1",
-        Score: 5
+        name: "Player1",
+        score: 5
     },
     {
-        Name: "Player2",
-        Score: 4
+        name: "Player2",
+        score: 4
     },
     {
-        Name: "Player3",
-        Score: 3
+        name: "Player3",
+        score: 3
     },
     {
-        Name: "Player4",
-        Score: 2
+        name: "Player4",
+        score: 2
     },
     {
-        Name: "Player5",
-        Score: 1
+        name: "Player5",
+        score: 1
     }
 
-];// end of savedScores
+];// end of savedScores */
 
 
 
@@ -138,7 +139,7 @@ let questionObjArr = [
     }
 
 ];
-////debugger;
+
 let totalQuestions = questionObjArr.length;
 //  for debugging setting totalQuestions to 1
 //totalQuestions = 1;
@@ -172,7 +173,7 @@ let timerID = setInterval(function() {timerFunction();}, 1000);
 
 let timerFunction = function() {
     console.log("In timerfunction")
-    //debugger;
+    
     if  (startTimer)  {
 
         console.log("One second has passed");
@@ -235,7 +236,7 @@ let drawIntroUI = function() {
 let askQuestion = function() {
 
 
-   // //debugger;
+ 
 
         let i = currentQuestion;
         let gameh2El = document.querySelector("#h2-game");
@@ -271,7 +272,7 @@ let askQuestion = function() {
 }; // end askQuestions
 
 let drawQuestionUI = function() {
-   ////debugger;
+   
     //setup the ui for questions:
     let gameh2El = document.querySelector("#h2-game");
     let gamePEl = document.querySelector("p");
@@ -296,7 +297,7 @@ let drawQuestionUI = function() {
 }; // end drawQuestionUI
 
 let drawHighScoresUI = function(nameInput) {
-    //debugger;
+  
     // remove UI items we don't need anymore
     let gamePEl = document.querySelector("p");
     gamePEl.remove();
@@ -304,11 +305,8 @@ let drawHighScoresUI = function(nameInput) {
     submitButtonButEl.remove();
     let nameInputEl = document.querySelector("INPUT");
     nameInputEl.remove();
+   
     
-
-
-
-
     //Update stuff we do need!
     let gameh2El = document.querySelector("#h2-game");
     gameh2El.textContent = "High Scores";
@@ -333,6 +331,7 @@ let drawHighScoresUI = function(nameInput) {
     highScoreOlEl.appendChild(highScore4liEL);
     highScoreOlEl.appendChild(highScore5liEL);
 
+
     let buttonHolderDivEl = document.createElement("div");
     buttonHolderDivEl.id = "button-holder";
     gameDivEl.appendChild(buttonHolderDivEl);
@@ -344,63 +343,97 @@ let drawHighScoresUI = function(nameInput) {
     clearHighScoresButEl.id = "clear-high-scores";
     buttonHolderDivEl.appendChild(goBackButtonButEl);
     buttonHolderDivEl.appendChild(clearHighScoresButEl);
-    goBackButtonButEl.setAttribute("style", "color: red");
+    goBackButtonButEl.setAttribute("style", "color: blue");
     goBackButtonButEl.textContent = "Go Back"
-    clearHighScoresButEl.setAttribute("style", "color: red");
-    clearHighScoresButEl.textContent = "Go Back"
+    clearHighScoresButEl.setAttribute("style", "color: blue");
+    clearHighScoresButEl.textContent = "Clear High Scores"
 
 //h1El.setAttribute("style", "margin:auto; width:50%; text-align:center;");
 
-    loadHighScores();
-    //debugger;
-    saveHighScores();
+   // loadHighScores();
+
+
+   // debug test...using load in the display high scores
+
+   let savedScores = localStorage.getItem("scores");
+  
+    if (!savedScores) {
+        savedScores = [];
+      for (let k = 0; k < 5; k++) {
+        score = 0;
+
+        let name = "Name";
+        const newScore =  {name, score};
+        savedScores[k] = (newScore);
+          
+      }
+    } else {
+        savedScores = JSON.parse(savedScores);
+
+    }
+  
     
-    highScore1liEL.textContent = (savedScores[0].Name + " " + savedScores[0].Score);
-    highScore2liEL.textContent = (savedScores[1].Name + " " + savedScores[1].Score);
-    highScore3liEL.textContent = (savedScores[2].Name + " " + savedScores[2].Score);
-    highScore4liEL.textContent = (savedScores[3].Name + " " + savedScores[3].Score);
-    highScore5liEL.textContent = (savedScores[4].Name + " " + savedScores[4].Score);
+    console.log(savedScores);
 
-
-
-
-
-
-    // Use localStorage to save high scores and retrieve them
     
 
+    // Lets see if the new score is higher and reorder the array
+    //if 
+   // let tmpScore = [].concat(savedScores);
+    score = timeLeft;
+    let name = nameInput;
+    const newScore =  {name, score};
 
 
+    // add the new info to the array
+    savedScores[5] = (newScore);
+    //savedScores[5].Score = 'finalScore';
+    // make a storage array
+
+
+    // lets sort the array
+    //savedScores.sort((firstItem, secondItem) => firstItem.score - secondItem.score);
+    savedScores.sort((firstItem, secondItem) =>  secondItem.score - firstItem.score);
+
+    // now set the list back down to 5 members
+
+    savedScores.splice(5);
+
+
+    highScore1liEL.textContent = (savedScores[0].name + " " + savedScores[0].score);
+    highScore2liEL.textContent = (savedScores[1].name + " " + savedScores[1].score);
+    highScore3liEL.textContent = (savedScores[2].name + " " + savedScores[2].score);
+    highScore4liEL.textContent = (savedScores[3].name + " " + savedScores[3].score);
+    highScore5liEL.textContent = (savedScores[4].name + " " + savedScores[4].score);
+    
+     // Use localStorage to save high scores and retrieve them
+    saveHighScores(savedScores);
+    
 
 }; //end drawHighScoresUI
 
-let saveHighScores = function() {
+let saveHighScores = function(savedScores) {
     // shows as [object Object]
     //localStorage.setItem("tasks", tasks);
     localStorage.setItem("scores", JSON.stringify(savedScores));
-  
   }//end saveTasks()
   
 
-let loadHighScores = function() {
+/* let loadHighScores = function() {
     let savedScores = localStorage.getItem("scores");
-    //debugger;
+  
     if (!savedScores) {
       return false;
     }
   
     savedScores = JSON.parse(savedScores);
-   // debugger;
-  
-    // loop through savedTasks array
-    for (var i = 0; i < savedScores.length; i++) {
-      // pass each task objects into the createTask() function
-      //createTaskEl(savedScores[i]);
-      console.log(savedScores);
-    } 
-   
-  };//end loadtasks()
+    console.log(savedScores);
 
+    
+  
+   
+  };//end loadHighScores()
+ */
 let drawFinalScoreUI = function() {
     
     let gameDivEl = document.querySelector("#game-div");
@@ -437,7 +470,7 @@ let drawFinalScoreUI = function() {
 }
 
 let isCorrect = function(event) {
-    //debugger;
+   
     let i = currentQuestion;
 
     if (event.target.id === "ans1") {
@@ -492,7 +525,7 @@ let isCorrect = function(event) {
 
     if (currentQuestion >= (totalQuestions-1))
     {
-        ////debugger;
+        
         // Game over turn off timer
         startTimer = false;
         drawFinalScoreUI();
@@ -512,7 +545,7 @@ let isCorrect = function(event) {
 let buttonHandler = function(event) {
     //Start button was hit.
     //setup HTML for question portion
-      //debugger;
+ 
     if (event.target.id === "start-button") {
         console.log("event.id = start-button");
       
@@ -531,12 +564,12 @@ let buttonHandler = function(event) {
         //let timerID = setInterval(function() {timerFunction(this);}, 1000);
         //time to ask questions
         drawQuestionUI();
-        //debugger;
+      
 
     } 
     // clicked the submit button to store initials
     else if (event.target.id === "submit") {
-        //debugger;
+        
 
         let nameInput = document.querySelector("INPUT").value;
         //let initialText = nameInputEl.getAttribute("TEXT");
