@@ -7,7 +7,7 @@ let introButEl = document.querySelector("start-button");
 
 // Global variables
 let playerScore = 0;
-let timeLeft = 50;
+let timeLeft = 5;
 let startTimer = false;
 let noAnswer = true;
 
@@ -144,28 +144,53 @@ let totalQuestions = questionObjArr.length;
 //totalQuestions = 1;
 console.log(questionObjArr);
 
-
+//ORIGINAL WORKED
 let timerID = setInterval(function() {timerFunction();}, 1000);
-
-
-
-
 
 
 
 // Functions
 
+ /* let timers = function() {
+
+     if(startTimer) {
+         let countdown = function() {
+         // do stuff
+         counter.textContent = count;
+         count--;
+         if(count<0) {
+              startTimer = false;
+             //count = 5;
+             clearInterval(timerID);
+             console.log('finished');
+         }
+        }
+     }
+     let timerID = setInterval(function() {timerFunction();}, 1000);
+     
+ }// end timers */
+
 let timerFunction = function() {
+    console.log("In timerfunction")
     //debugger;
     if  (startTimer)  {
+
         console.log("One second has passed");
         let timerH2El = document.querySelector(".time-left");
         timerH2El.textContent = "Time Left: " + timeLeft;
+        
+        if (timeLeft<= 0) {
+            timeLeft = 0;
+            drawFinalScoreUI ();
+            startTimer = false;
+           // timers();
+            
+        }
         timeLeft = timeLeft -1;
 
-    }
+    } 
    
-}
+} // end timerFunction
 
 
 let drawIntroUI = function() {
@@ -308,9 +333,26 @@ let drawHighScoresUI = function(nameInput) {
     highScoreOlEl.appendChild(highScore4liEL);
     highScoreOlEl.appendChild(highScore5liEL);
 
+    let buttonHolderDivEl = document.createElement("div");
+    buttonHolderDivEl.id = "button-holder";
+    gameDivEl.appendChild(buttonHolderDivEl);
+    buttonHolderDivEl.setAttribute("style", "display:flex; min-width: 50%;");
+
+    let goBackButtonButEl = document.createElement("button");
+    goBackButtonButEl.id = "go-back";
+    let clearHighScoresButEl = document.createElement("button");
+    clearHighScoresButEl.id = "clear-high-scores";
+    buttonHolderDivEl.appendChild(goBackButtonButEl);
+    buttonHolderDivEl.appendChild(clearHighScoresButEl);
+    goBackButtonButEl.setAttribute("style", "color: red");
+    goBackButtonButEl.textContent = "Go Back"
+    clearHighScoresButEl.setAttribute("style", "color: red");
+    clearHighScoresButEl.textContent = "Go Back"
+
+//h1El.setAttribute("style", "margin:auto; width:50%; text-align:center;");
 
     loadHighScores();
-    debugger;
+    //debugger;
     saveHighScores();
     
     highScore1liEL.textContent = (savedScores[0].Name + " " + savedScores[0].Score);
@@ -355,7 +397,7 @@ let loadHighScores = function() {
       // pass each task objects into the createTask() function
       //createTaskEl(savedScores[i]);
       console.log(savedScores);
-    }
+    } 
    
   };//end loadtasks()
 
@@ -485,8 +527,11 @@ let buttonHandler = function(event) {
         gameh2El.textContent = "We are in questions now!!!!!!";
         //turn on the timer
         startTimer = true;
+        //timers();
+        //let timerID = setInterval(function() {timerFunction(this);}, 1000);
         //time to ask questions
         drawQuestionUI();
+        //debugger;
 
     } 
     // clicked the submit button to store initials
