@@ -172,8 +172,7 @@ let drawIntroUI = function() {
     
         gameSurfaceEl.setAttribute("style", "background-color:lightgrey");
         // create the start screen
-        //let titleText 
-    
+       
         let gameDivEl = document.createElement("div");
         let gameh2El = document.createElement("h2");
         let gamePEl = document.createElement("p");
@@ -189,8 +188,6 @@ let drawIntroUI = function() {
         introButEl.textContent = "To start press!"; 
         introButEl.id = "start-button";
             
-
-        //tempText.textContent("test");
         gameSurfaceEl.appendChild(gameDivEl);
 
         gameDivEl.appendChild(gameh2El);
@@ -200,10 +197,6 @@ let drawIntroUI = function() {
         gameh2El.id = "h2-game";
         gameDivEl.appendChild(gamePEl);
         gameDivEl.appendChild(introButEl);
-
-        
-    
-   
 
 } //end drawIntroUI()
 
@@ -222,9 +215,6 @@ let askQuestion = function() {
         gameh2El.textContent = "Question #" + questionObjArr[i].questionNum;
         gamePEl.textContent = questionObjArr[i].questionText;
 
-        // Randomize this later
-        //
-        //
         // eneable the buttons
         document.querySelector("#ans1").disabled = false;
         document.querySelector("#ans2").disabled = false;
@@ -285,7 +275,6 @@ let drawHighScoresUI = function(nameInput) {
     let gameh2El = document.querySelector("#h2-game");
     gameh2El.textContent = "High Scores";
 
-//debugger;
     // add a list for high scores
     let gameDivEl = document.querySelector("#game-div");
     let highScoreOlEl = document.createElement("ol");
@@ -327,12 +316,6 @@ let drawHighScoresUI = function(nameInput) {
     clearHighScoresButEl.setAttribute("style", "color: blue");
     clearHighScoresButEl.textContent = "Clear High Scores"
 
-//h1El.setAttribute("style", "margin:auto; width:50%; text-align:center;");
-
-   // loadHighScores();
-
-
-   // debug test...using load in the display high scores
 
    let savedScores = localStorage.getItem("scores");
   
@@ -427,10 +410,6 @@ let drawFinalScoreUI = function() {
     submitButtonButEl.textContent = "Submit";
     gameDivEl.appendChild(submitButtonButEl);
 
-     
-
-    
-
 }
 
 let isCorrect = function(event) {
@@ -438,35 +417,23 @@ let isCorrect = function(event) {
     let i = currentQuestion;
 
     if (event.target.id === "ans1") {
-        pickedAnswer = 1;
-    }
-    if (event.target.id === "ans2") {
-        pickedAnswer = 2;
-    }
-    if (event.target.id === "ans3") {
-        pickedAnswer = 3;
-    }
-    if (event.target.id === "ans4") {
-        pickedAnswer = 4;
-    }
-   
-    let correctAnswer = questionObjArr[i].corrAnswer;
-    if(pickedAnswer === 1 ) {
+        //pickedAnswer = 1;
         temp = questionObjArr[i].answer1;
     }
-    else if (pickedAnswer === 2 ) 
-    {
-        temp = questionObjArr[i].answer2;
-    } 
-    else  if(pickedAnswer === 3 )
-     {
+    if (event.target.id === "ans2") {
+       //pickedAnswer = 2;
+       temp = questionObjArr[i].answer2;
+    }
+    if (event.target.id === "ans3") {
+        //pickedAnswer = 3;
         temp = questionObjArr[i].answer3;
     }
-    else  if(pickedAnswer === 4 ) 
-    {
+    if (event.target.id === "ans4") {
+        //pickedAnswer = 4;
         temp = questionObjArr[i].answer4;
     }
-//debugger;
+  
+    let correctAnswer = questionObjArr[i].corrAnswer;
     if (correctAnswer === temp) {
         
         numCorrect++;
@@ -478,8 +445,6 @@ let isCorrect = function(event) {
       boolCorrectText.textContent = "Correct!";
       boolCorrectText.setAttribute("style", "color:green");
 
-
-      
       var timeOut = setTimeout(function() {
     
             boolCorrectText.setAttribute("style", "visibility:hidden;");
@@ -500,8 +465,7 @@ let isCorrect = function(event) {
              }
         
         },1000);
-
-        
+   
     } 
     else //User got it wrong
     {
@@ -534,20 +498,7 @@ let isCorrect = function(event) {
         
             },1000);
 
-        
-
-
-
-    }
-  
-   
-   
-
-
-    
-    
-    
-
+    }   
 }// end isCorrect()
 
 
@@ -564,7 +515,6 @@ let buttonHandler = function(event) {
         // we don't need the start button for now...so hide it
         let introButEl = document.querySelector("button");
         introButEl.style.display = 'none';
-
 
         gameh2El.textContent = "We are in questions now!!!!!!";
         //turn on the timer
@@ -591,16 +541,12 @@ let buttonHandler = function(event) {
         isCorrect(event);
         console.log("clicked an answer button going to isCorrect()");
         // lets turn off buttons until the new question
-        
-       
+         
         document.querySelector("#ans1").disabled = true;
         document.querySelector("#ans2").disabled = true;
         document.querySelector("#ans3").disabled = true;
         document.querySelector("#ans4").disabled = true;
-
-      
-        
-        
+    
     }
     else if (event.target.id === "go-back") {
         console.log("Gobackclicked!!!!");
@@ -633,26 +579,8 @@ let buttonHandler = function(event) {
                 highScore3liEL.textContent = "Name 0";
                 highScore4liEL.textContent = "Name 0";
                 highScore5liEL.textContent = "Name 0";
-                
-
-
-
-            
-            
-              
-
+    
     }
-
-
-    
-        
-
-
-    
-
-    
-   // console.log(event);
-   // console.log("Start button was clicked");
 
 }//end buttonHandler()
 
