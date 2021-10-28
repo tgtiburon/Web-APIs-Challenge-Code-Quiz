@@ -7,38 +7,13 @@ let introButEl = document.querySelector("start-button");
 
 // Global variables
 let playerScore = 0;
-let timeLeft = 5;
+let timeLeft = 100;
 let startTimer = false;
 let noAnswer = true;
 
 let currentQuestion = 0;
 let numCorrect = 0;
 let finalScore = 0;
-
-/* let savedScores = [
-    {
-        name: "Player1",
-        score: 5
-    },
-    {
-        name: "Player2",
-        score: 4
-    },
-    {
-        name: "Player3",
-        score: 3
-    },
-    {
-        name: "Player4",
-        score: 2
-    },
-    {
-        name: "Player5",
-        score: 1
-    }
-
-];// end of savedScores */
-
 
 
 
@@ -48,94 +23,94 @@ let questionObjArr = [
     
     {
         questionNum: 1, 
-        questionText: "1 + 1",
-        corrAnswer: "2",
-        answer1: "2",
-        answer2: "1",
-        answer3: "3",
-        answer4: "10"
+        questionText: "Is the DOM built into the javaScript Language?",
+        corrAnswer: "No",
+        answer1: "Yes",
+        answer2: "No",
+        answer3: "If you add Moment.js",
+        answer4: "DOM is not part of javaScript at all"
     },
     {
         questionNum: 2, 
-        questionText: "2 + 1",
-        corrAnswer: "3",
-        answer1: "3",
-        answer2: "1",
-        answer3: "4",
-        answer4: "10"
+        questionText: "If you are trying to focus on a specific element what code would you use?",
+        corrAnswer: "document.querySelector('elementName')",
+        answer1: "document.createElement('elementName')",
+        answer2: "element.querySelect('elementName')",
+        answer3: "document.querySelector('elementName')",
+        answer4: "document.elementSelect('element')"
     },
     {
         questionNum: 3, 
-        questionText: "3 + 1",
-        corrAnswer: "4",
-        answer1: "4",
-        answer2: "1",
-        answer3: "3",
-        answer4: "10"
+        questionText: "How do you detect if a button has been clicked?",
+        corrAnswer: "By using button.addEventListner('click', funciton())",
+        answer1: "By using the button.click method",
+        answer2: "By using button.addEvent('click', function())",
+        answer3: "By using button.addListener('click',function())",
+        answer4: "By using button.addEventListner('click', function())"
     },
     {
         questionNum: 4, 
-        questionText: "4 + 1",
-        corrAnswer: "5",
-        answer1: "5",
-        answer2: "1",
-        answer3: "3",
-        answer4: "10"
+        questionText: "Which is the correct order of code?",
+        corrAnswer: "createElement and then appendChild",
+        answer1: "createElement and then appendChild",
+        answer2: "appendChild and then createElement",
+        answer3: "createChild and then appendElement",
+        answer4: "appendElement and then createChild"
     },
 
     {
         questionNum: 5, 
-        questionText: "5 + 1",
-        corrAnswer: "6",
-        answer1: "6",
-        answer2: "1",
-        answer3: "3",
-        answer4: "10"
+        questionText: "How do you delete a selected element?",
+        corrAnswer: "selectedElement.remove()",
+        answer1: "selected Element.remove()",
+        answer2: "selectedElement.delete()",
+        answer3: "selectedElement.remove()",
+        answer4: "selectedElement.dependchild()"
     },
     {
         questionNum: 6, 
-        questionText: "6 + 1",
-        corrAnswer: "7",
-        answer1: "7",
-        answer2: "1",
-        answer3: "3",
-        answer4: "10"
+        questionText: "How do you select where an event came from?",
+        corrAnswer: "event.target",
+        answer1: "target.event",
+        answer2: "event.event.target",
+        answer3: "event.target.event",
+        answer4: "event.target"
     },
     {
         questionNum: 7, 
-        questionText: "7 + 1",
-        corrAnswer: "8",
-        answer1: "8",
-        answer2: "1",
-        answer3: "3",
-        answer4: "10"
+        questionText: "What js object can you store data on a computer?",
+        corrAnswer: "localStorage",
+        answer1: "storageLocal",
+        answer2: "localStorage",
+        answer3: "storageLocation",
+        answer4: "locationStorage"
     },
     {
         questionNum: 8, 
-        questionText: "8 + 1",
-        corrAnswer: "9",
-        answer1: "9",
-        answer2: "1",
-        answer3: "3",
-        answer4: "10"
+        questionText: "When you save data with localStorage, what do you need to do first?",
+        corrAnswer: "JSON.stringify(data)",
+        answer1: "JSON.stringify(data)",
+        answer2: "JSON.string(data)",
+        answer3: "JSON.parse(data)",
+        answer4: "JSON.parseify(data)"
     },
     {
         questionNum: 9, 
-        questionText: "9 + 1",
-        corrAnswer: "10",
-        answer1: "10",
-        answer2: "1",
-        answer3: "3",
-        answer4: "16"
+        questionText: "When you load data with localStorage, what do you need to do first?",
+        corrAnswer: "JSON.parse(data)",
+        answer1: "JSON.parseify(data)",
+        answer2: "JSON.stringify(data)",
+        answer3: "JSON.string(data)",
+        answer4: "JSON.parse(data)"
     },
     {
         questionNum: 10, 
-        questionText: "10 + 1",
-        corrAnswer: "11",
-        answer1: "11",
-        answer2: "1",
-        answer3: "3",
-        answer4: "10"
+        questionText: "What command do you to create a new branch on github?",
+        corrAnswer: "git checkout -b <branch-name>",
+        answer1: "git pull <branch-name>",
+        answer2: "git merge -b <branch-name>",
+        answer3: "git checkout <branch-name>",
+        answer4: "git checkout -b <branch-name>"
     }
 
 ];
@@ -147,8 +122,6 @@ console.log(questionObjArr);
 
 //ORIGINAL WORKED
 let timerID = setInterval(function() {timerFunction();}, 1000);
-
-
 
 // Functions
 
@@ -227,6 +200,8 @@ let drawIntroUI = function() {
         gameh2El.id = "h2-game";
         gameDivEl.appendChild(gamePEl);
         gameDivEl.appendChild(introButEl);
+
+        
     
    
 
@@ -234,9 +209,6 @@ let drawIntroUI = function() {
 
 
 let askQuestion = function() {
-
-
- 
 
         let i = currentQuestion;
         let gameh2El = document.querySelector("#h2-game");
@@ -247,27 +219,22 @@ let askQuestion = function() {
         let ans3ButtonButEl = document.querySelector("#ans3");
         let ans4ButtonButEl = document.querySelector("#ans4");
         
-
-
-
         gameh2El.textContent = "Question #" + questionObjArr[i].questionNum;
         gamePEl.textContent = questionObjArr[i].questionText;
 
         // Randomize this later
         //
         //
+        // eneable the buttons
+        document.querySelector("#ans1").disabled = false;
+        document.querySelector("#ans2").disabled = false;
+        document.querySelector("#ans3").disabled = false;
+        document.querySelector("#ans4").disabled = false;
 
         ans1ButtonButEl.textContent = questionObjArr[i].answer1;
         ans2ButtonButEl.textContent = questionObjArr[i].answer2;
         ans3ButtonButEl.textContent = questionObjArr[i].answer3;
         ans4ButtonButEl.textContent = questionObjArr[i].answer4;
-
-
- 
-
-        
-   
-    
 
 }; // end askQuestions
 
@@ -291,6 +258,13 @@ let drawQuestionUI = function() {
     gameDivEl.appendChild(ans3ButtonButEl);
     gameDivEl.appendChild(ans4ButtonButEl);
 
+    // add correct or wrong to screen
+    let boolCorrectText = document.createElement("div");
+        gameDivEl.appendChild(boolCorrectText);
+        boolCorrectText.id = "bool-correct-text";
+        boolCorrectText.textContent = "";
+        boolCorrectText.setAttribute("style", "padding: 10px; position: absolute; bottom: 77px; align-conent: center" );
+
     // see if the user has answered before iterating to next question
      askQuestion();
             
@@ -311,15 +285,20 @@ let drawHighScoresUI = function(nameInput) {
     let gameh2El = document.querySelector("#h2-game");
     gameh2El.textContent = "High Scores";
 
-
+//debugger;
     // add a list for high scores
     let gameDivEl = document.querySelector("#game-div");
     let highScoreOlEl = document.createElement("ol");
     let highScore1liEL = document.createElement("li");
+    highScore1liEL.id = "1-score";
     let highScore2liEL = document.createElement("li");
+    highScore2liEL.id = "2-score";
     let highScore3liEL = document.createElement("li");
+    highScore3liEL.id = "3-score";
     let highScore4liEL = document.createElement("li");
+    highScore4liEL.id = "4-score";
     let highScore5liEL = document.createElement("li");
+    highScore5liEL.id = "5-score";
     
 
     gameDivEl.appendChild(highScoreOlEl);
@@ -419,21 +398,6 @@ let saveHighScores = function(savedScores) {
   }//end saveTasks()
   
 
-/* let loadHighScores = function() {
-    let savedScores = localStorage.getItem("scores");
-  
-    if (!savedScores) {
-      return false;
-    }
-  
-    savedScores = JSON.parse(savedScores);
-    console.log(savedScores);
-
-    
-  
-   
-  };//end loadHighScores()
- */
 let drawFinalScoreUI = function() {
     
     let gameDivEl = document.querySelector("#game-div");
@@ -441,7 +405,7 @@ let drawFinalScoreUI = function() {
     let gameh2El = document.querySelector("#h2-game");
     let gamePEl = document.querySelector("p");
     gameh2El.textContent = "Final Score!";
-    gamePEl.textContent = "More to come!";
+    gamePEl.textContent = "Input your initials please:";
 
     let ans1ButtonButEl = document.querySelector("#ans1");
     let ans2ButtonButEl = document.querySelector("#ans2");
@@ -502,37 +466,82 @@ let isCorrect = function(event) {
     {
         temp = questionObjArr[i].answer4;
     }
-
+//debugger;
     if (correctAnswer === temp) {
         
         numCorrect++;
         console.log("You got this many correct " + numCorrect);
-        currentQuestion ++;
-        timeLeft = timeLeft + 2;
-        askQuestion();
+       //currentQuestion ++;
+      //  timeLeft = timeLeft + 2;
+      // Correct!
+      let boolCorrectText = document.querySelector("#bool-correct-text");
+      boolCorrectText.textContent = "Correct!";
+      boolCorrectText.setAttribute("style", "color:green");
+
+
+      
+      var timeOut = setTimeout(function() {
+    
+            boolCorrectText.setAttribute("style", "visibility:hidden;");
+       
+        //askQuestion();
+             // see if that was the last question
+             if (currentQuestion >= (totalQuestions-1))
+             {
+                 
+                 // Game over turn off timer
+                 startTimer = false;
+                 drawFinalScoreUI();
+ 
+             } else {
+ 
+                 currentQuestion++;
+                 askQuestion();
+             }
+        
+        },1000);
+
+        
     } 
     else //User got it wrong
     {
         // take time away
-        currentQuestion ++;
+       //currentQuestion ++;
         timeLeft = timeLeft -5;
-        askQuestion();
+        // Incorrect
+        let boolCorrectText = document.querySelector("#bool-correct-text");
+        boolCorrectText.textContent = "Wrong!";
+        boolCorrectText.setAttribute("style", "color:red");
+
+        var timeOut = setTimeout(function() {
+    
+            boolCorrectText.setAttribute("style", "visibility:hidden;");
+          
+            
+              // see if that was the last question
+            if (currentQuestion >= (totalQuestions-1))
+            {
+                
+                // Game over turn off timer
+                startTimer = false;
+                drawFinalScoreUI();
+
+            } else {
+
+                currentQuestion++;
+                askQuestion();
+            }
+        
+            },1000);
+
+        
 
 
 
     }
-    // I could just check the questionObjArr but for debugging
-
-    if (currentQuestion >= (totalQuestions-1))
-    {
-        
-        // Game over turn off timer
-        startTimer = false;
-        drawFinalScoreUI();
-        
-        
-        
-    }
+  
+   
+   
 
 
     
@@ -581,7 +590,57 @@ let buttonHandler = function(event) {
     else if ((event.target.id ==="ans1")|| (event.target.id ==="ans2")||(event.target.id ==="ans3")||(event.target.id ==="ans4")) {
         isCorrect(event);
         console.log("clicked an answer button going to isCorrect()");
+        // lets turn off buttons until the new question
         
+       
+        document.querySelector("#ans1").disabled = true;
+        document.querySelector("#ans2").disabled = true;
+        document.querySelector("#ans3").disabled = true;
+        document.querySelector("#ans4").disabled = true;
+
+      
+        
+        
+    }
+    else if (event.target.id === "go-back") {
+        console.log("Gobackclicked!!!!");
+        location.reload();
+
+
+    }
+    else if (event.target.id === "clear-high-scores") {
+        console.log("ClearHighScores!!!!!!");
+        let savedScores = localStorage.getItem("scores");
+        savedScores = JSON.parse(savedScores);
+        // lets put in dummy scores
+            for (let k = 0; k < 5; k++) {
+                score = 0;
+    
+                let name = "Name";
+                const newScore =  {name, score};
+                savedScores[k] = (newScore);
+            }
+            localStorage.setItem("scores", JSON.stringify(savedScores));
+              // debugger;
+                let highScore1liEL = document.getElementById("1-score");
+                let highScore2liEL = document.getElementById("2-score");
+                let highScore3liEL = document.getElementById("3-score");
+                let highScore4liEL = document.getElementById("4-score");
+                let highScore5liEL = document.getElementById("5-score");
+               
+                highScore1liEL.textContent = "Name 0";
+                highScore2liEL.textContent = "Name 0";
+                highScore3liEL.textContent = "Name 0";
+                highScore4liEL.textContent = "Name 0";
+                highScore5liEL.textContent = "Name 0";
+                
+
+
+
+            
+            
+              
+
     }
 
 
