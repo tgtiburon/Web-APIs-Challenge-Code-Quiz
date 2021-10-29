@@ -44,11 +44,11 @@ let questionObjArr = [
     {
         questionNum: 3, 
         questionText: "How do you detect if a button has been clicked?",
-        corrAnswer: "By using button.addEventListner('click', funciton())",
+        corrAnswer: "By using button.addEventListener('click', function())",
         answer1: "By using the button.click method",
         answer2: "By using button.addEvent('click', function())",
         answer3: "By using button.addListener('click',function())",
-        answer4: "By using button.addEventListner('click', function())"
+        answer4: "By using button.addEventListener('click', function())"
     },
     {
         questionNum: 4, 
