@@ -16,6 +16,8 @@ let currentQuestion = 0;
 let numCorrect = 0;
 let finalScore = 0;
 let currentScreen = "intro";
+let lastScreen = "intro";
+let gameOver = false;
 
 
 
@@ -119,8 +121,13 @@ let questionObjArr = [
 
 let totalQuestions = questionObjArr.length;
 //  for debugging setting totalQuestions to 3
-totalQuestions = 3;
-console.log(questionObjArr);
+// remove this
+//
+//
+//SET totalQuestions to 10 before finishing
+
+totalQuestions = 10;
+//console.log(questionObjArr);
 
 //ORIGINAL WORKED
 let timerID = setInterval(function() {timerFunction();}, 1000);
@@ -147,11 +154,11 @@ let timerID = setInterval(function() {timerFunction();}, 1000);
  }// end timers */
 
 let timerFunction = function() {
-    console.log("In timerfunction")
+   // console.log("In timerfunction")
     
     if  (startTimer)  {
 
-        console.log("One second has passed");
+       // console.log("One second has passed");
         let timerH2El = document.querySelector(".time-left");
         timerH2El.textContent = "Time Left: " + timeLeft;
         
@@ -168,43 +175,60 @@ let timerFunction = function() {
    
 } // end timerFunction
 
+let initialSetup = function () {
+
+    // load elements that will be omnipresent
+
+    let gameDivEl = document.createElement("div");
+    let gameh2El = document.createElement("h2"); 
+    // High score and timer text
+    let timerH2El = document.querySelector(".time-left");
+    timerH2El.textContent = "Time Left: " + timeLeft;
+    gameSurfaceEl.appendChild(gameDivEl);
+    let highScoreH2El = document.querySelector(".high-score-title");
+    highScoreH2El.textContent = "View High Score";
+
+    gameDivEl.appendChild(gameh2El);
+    gameDivEl.id = "game-div";
+    gameh2El.id = "h2-game";
+
+    let gamePEl = document.createElement("p");
+    gameDivEl.appendChild(gamePEl);
+    
+    drawIntroUI(); 
+}
+
 
 let drawIntroUI = function() {
    
-    
-       // gameSurfaceEl.setAttribute("style", "background-color:lightgrey");
         // create the start screen
        
-        let gameDivEl = document.createElement("div");
-        let gameh2El = document.createElement("h2");
-        let gamePEl = document.createElement("p");
-        let introButEl = document.createElement("button");
-
+        let gameDivEl = document.querySelector("#game-div");
+        let gameh2El = document.querySelector("#game-div>h2");
+        let gamePEl = document.querySelector("p");
+     
+       let introButEl = document.createElement("button");
+      
+        gameDivEl.appendChild(introButEl);
+      
+        introButEl.textContent = "To start press!"; 
+        introButEl.id = "start-button";
+    
         // timer
         let timerH2El = document.querySelector(".time-left");
         timerH2El.textContent = "Time Left: " + timeLeft;
 
         gameh2El.textContent = "Welcome to the game";
-        gamePEl.textContent = "This game is designed to help you study Web APIs. If you get a question incorrect you lose 5 seconds on the clock. If you get a question correct you get 1 second added to the timer. If the clock hits zero, the game is over!"; 
+        gamePEl.textContent = "This game is designed to help you study Web APIs. If you get a question incorrect you lose 5 seconds on the clock. If the clock hits zero, the game is over!"; 
         //introButEl.innerHTML = "Press to start the quiz!";  
-        introButEl.textContent = "To start press!"; 
-        introButEl.id = "start-button";
-            
-        gameSurfaceEl.appendChild(gameDivEl);
-
-        gameDivEl.appendChild(gameh2El);
-        gameDivEl.id = "game-div";
-
-        //gameDivEl.id = "h2-intro";
-        gameh2El.id = "h2-game";
-        gameDivEl.appendChild(gamePEl);
-        gameDivEl.appendChild(introButEl);
+       
+        currentScreen = "intro";
 
 } //end drawIntroUI()
 
 
 let askQuestion = function() {
-
+    
         let i = currentQuestion;
         let gameh2El = document.querySelector("#h2-game");
         let gamePEl = document.querySelector("p");
@@ -233,58 +257,50 @@ let askQuestion = function() {
 let isCorrect = function(event) {
    
     let i = currentQuestion;
-
+//Set the answer the user chose into temp
     if (event.target.id === "ans1") {
-        //pickedAnswer = 1;
         temp = questionObjArr[i].answer1;
     }
     if (event.target.id === "ans2") {
-       //pickedAnswer = 2;
        temp = questionObjArr[i].answer2;
     }
     if (event.target.id === "ans3") {
-        //pickedAnswer = 3;
         temp = questionObjArr[i].answer3;
     }
     if (event.target.id === "ans4") {
-        //pickedAnswer = 4;
         temp = questionObjArr[i].answer4;
     }
-  
+  // get the correct answer
     let correctAnswer = questionObjArr[i].corrAnswer;
+    // if the user is correct
     if (correctAnswer === temp) {
         
-        numCorrect++;
-        console.log("You got this many correct " + numCorrect);
-       //currentQuestion ++;
-      //  timeLeft = timeLeft + 2;
-      // Correct!
+        // tell them they are correct
       let boolCorrectText = document.querySelector("#bool-correct-text");
       boolCorrectText.textContent = "Correct!";
       boolCorrectText.setAttribute("style", "color:green");
-
+        // Wait one second before moving to the next question or the final score
       var timeOut = setTimeout(function() {
     
             boolCorrectText.setAttribute("style", "visibility:hidden;");
        
-        //askQuestion();
              // see if that was the last question
              if (currentQuestion >= (totalQuestions-1))
-             {
-                 
+             { 
                  // Game over turn off timer
                  startTimer = false;
+                 // game over
+                 gameOver = true;
                  drawFinalScoreUI();
  
              } else {
- 
+                // itterate the question
                  currentQuestion++;
                  askQuestion();
              }
-        
         },1000);
-   
     } 
+
     else //User got it wrong
     {
         // take time away
@@ -295,17 +311,16 @@ let isCorrect = function(event) {
         boolCorrectText.textContent = "Wrong!";
         boolCorrectText.setAttribute("style", "color:red");
 
+        // Wait a second before moving on.
         var timeOut = setTimeout(function() {
     
             boolCorrectText.setAttribute("style", "visibility:hidden;");
-          
-            
               // see if that was the last question
             if (currentQuestion >= (totalQuestions-1))
-            {
-                
+            {  
                 // Game over turn off timer
                 startTimer = false;
+                gameOver = true;
                 drawFinalScoreUI();
 
             } else {
@@ -313,18 +328,16 @@ let isCorrect = function(event) {
                 currentQuestion++;
                 askQuestion();
             }
-        
-            },1000);
-
+    
+        },1000);
     }   
 }// end isCorrect()
 
 let drawQuestionUI = function() {
-   
-    //setup the ui for questions:
-    let gameh2El = document.querySelector("#h2-game");
-    let gamePEl = document.querySelector("p");
+ 
     let gameDivEl = document.querySelector("#game-div");
+    let gamePEl = document.createElement("p");
+    gameDivEl.appendChild(gamePEl);
     let ans1ButtonButEl = document.createElement("button");
     ans1ButtonButEl.id = "ans1";
     let ans2ButtonButEl = document.createElement("button");
@@ -344,30 +357,35 @@ let drawQuestionUI = function() {
         gameDivEl.appendChild(boolCorrectText);
         boolCorrectText.id = "bool-correct-text";
         boolCorrectText.textContent = "";
-        boolCorrectText.setAttribute("style", "padding: 10px; position: absolute; bottom: 77px; align-conent: center" );
-
+      
     // see if the user has answered before iterating to next question
      askQuestion();
+     currentScreen = "question";
             
 }; // end drawQuestionUI
 
 let drawHighScoresUI = function(nameInput) {
   
-    // remove UI items we don't need anymore
-    let gamePEl = document.querySelector("p");
-    gamePEl.remove();
-    let submitButtonButEl = document.querySelector("#submit"); 
-    submitButtonButEl.remove();
-    let nameInputEl = document.querySelector("INPUT");
-    nameInputEl.remove();
-   
-    
+  // PRETTY SURE I CAN USE QUERY SELECT
+  let gameDivEl = document.querySelector("div");
+  //let gameh2El = document.querySelector("h2");
+  let gameh2El = document.querySelector("#game-div>h2");
+  let gamePEl = document.querySelector("p");
+  gamePEl.textContent = "";
+  
+  // I DONT THINK I NEED THESE TWO
+  //gameSurfaceEl.appendChild(gameDivEl);
+
+  //gameDivEl.appendChild(gameh2El);
     //Update stuff we do need!
-    let gameh2El = document.querySelector("#h2-game");
+    //gameh2El = document.querySelector("#h2-game");
+    // or this line
+    //gameDivEl.appendChild(gameh2El);
     gameh2El.textContent = "High Scores";
+    
 
     // add a list for high scores
-    let gameDivEl = document.querySelector("#game-div");
+    gameDivEl = document.querySelector("#game-div");
     let highScoreOlEl = document.createElement("ol");
     let highScore1liEL = document.createElement("li");
     highScore1liEL.id = "1-score";
@@ -380,33 +398,25 @@ let drawHighScoresUI = function(nameInput) {
     let highScore5liEL = document.createElement("li");
     highScore5liEL.id = "5-score";
     
-
     gameDivEl.appendChild(highScoreOlEl);
- 
-
     highScoreOlEl.appendChild(highScore1liEL);
     highScoreOlEl.appendChild(highScore2liEL);
     highScoreOlEl.appendChild(highScore3liEL);
     highScoreOlEl.appendChild(highScore4liEL);
     highScoreOlEl.appendChild(highScore5liEL);
 
-
     let buttonHolderDivEl = document.createElement("div");
     buttonHolderDivEl.id = "button-holder";
     gameDivEl.appendChild(buttonHolderDivEl);
-    buttonHolderDivEl.setAttribute("style", "display:flex; min-width: 50%;");
-
+   
     let goBackButtonButEl = document.createElement("button");
     goBackButtonButEl.id = "go-back";
     let clearHighScoresButEl = document.createElement("button");
     clearHighScoresButEl.id = "clear-high-scores";
     buttonHolderDivEl.appendChild(goBackButtonButEl);
     buttonHolderDivEl.appendChild(clearHighScoresButEl);
-   // goBackButtonButEl.setAttribute("style", "color: blue");
     goBackButtonButEl.textContent = "Go Back"
-   // clearHighScoresButEl.setAttribute("style", "color: blue");
     clearHighScoresButEl.textContent = "Clear High Scores"
-
 
    let savedScores = localStorage.getItem("scores");
   
@@ -417,42 +427,24 @@ let drawHighScoresUI = function(nameInput) {
 
         let name = "Name";
         const newScore =  {name, score};
-        savedScores[k] = (newScore);
-          
+        savedScores[k] = (newScore);    
       }
     } else {
         savedScores = JSON.parse(savedScores);
 
     }
-  
-    
-    console.log(savedScores);
-
-    
-
     // Lets see if the new score is higher and reorder the array
-    //if 
-   // let tmpScore = [].concat(savedScores);
     score = timeLeft;
     let name = nameInput;
     const newScore =  {name, score};
-
-
     // add the new info to the array
     savedScores[5] = (newScore);
-    //savedScores[5].Score = 'finalScore';
-    // make a storage array
-
-
     // lets sort the array
-    //savedScores.sort((firstItem, secondItem) => firstItem.score - secondItem.score);
     savedScores.sort((firstItem, secondItem) =>  secondItem.score - firstItem.score);
-
     // now set the list back down to 5 members
-
     savedScores.splice(5);
 
-
+    // print the high scores
     highScore1liEL.textContent = (savedScores[0].name + " " + savedScores[0].score);
     highScore2liEL.textContent = (savedScores[1].name + " " + savedScores[1].score);
     highScore3liEL.textContent = (savedScores[2].name + " " + savedScores[2].score);
@@ -461,8 +453,8 @@ let drawHighScoresUI = function(nameInput) {
     
      // Use localStorage to save high scores and retrieve them
     saveHighScores(savedScores);
+    currentScreen = "highscores";
     
-
 }; //end drawHighScoresUI
 
 let saveHighScores = function(savedScores) {
@@ -471,26 +463,18 @@ let saveHighScores = function(savedScores) {
     localStorage.setItem("scores", JSON.stringify(savedScores));
   }//end saveTasks()
   
-
 let drawFinalScoreUI = function() {
-    
+
+    if (currentScreen === "question")
+    {
+        hideScreen("question"); //maybe?
+    }  
     let gameDivEl = document.querySelector("#game-div");
 
     let gameh2El = document.querySelector("#h2-game");
     let gamePEl = document.querySelector("p");
     gameh2El.textContent = "Final Score!";
     gamePEl.textContent = "Input your initials please:";
-
-    let ans1ButtonButEl = document.querySelector("#ans1");
-    let ans2ButtonButEl = document.querySelector("#ans2");
-    let ans3ButtonButEl = document.querySelector("#ans3");
-    let ans4ButtonButEl = document.querySelector("#ans4");
-
-    // remove the buttons
-    ans1ButtonButEl.remove();
-    ans2ButtonButEl.remove();
-    ans3ButtonButEl.remove();
-    ans4ButtonButEl.remove();
 
     let nameInputEl = document.createElement("INPUT");
     nameInputEl.setAttribute("type", "text");
@@ -501,36 +485,98 @@ let drawFinalScoreUI = function() {
     submitButtonButEl.textContent = "Submit";
     gameDivEl.appendChild(submitButtonButEl);
 
+    currentScreen = "final";
+
 }
 
+/* Function to clear the current screen to get ready to draw a new screen
 
+
+*/
+
+let hideScreen = function(currentScreen) {
+  
+
+    if (currentScreen === "intro") {
+        let introButEl = document.querySelector("#start-button");
+        introButEl.remove();
+        let gamePEl = document.querySelector("p"); 
+        gamePEl.textContent = "";
+        lastScreen = "intro";
+       
+    }
+    else if (currentScreen === "question") {
+        let ans1ButtonButEl = document.querySelector("#ans1");
+        let ans2ButtonButEl = document.querySelector("#ans2");
+        let ans3ButtonButEl = document.querySelector("#ans3");
+        let ans4ButtonButEl = document.querySelector("#ans4");
+        let gamePEl = document.querySelector("p");
+
+        gamePEl.textContent = "";
+
+        ans1ButtonButEl.remove();
+        ans2ButtonButEl.remove();
+        ans3ButtonButEl.remove(); 
+        ans4ButtonButEl.remove(); 
+
+
+        let boolCorrectText = document.querySelector("#bool-correct-text");
+        boolCorrectText.remove();
+        lastScreen = "question";
+
+    }
+    else if (currentScreen=== "final") {
+
+        let nameInputEl = document.querySelector("INPUT");
+        nameInputEl.remove();
+        let submitButtonButEl = document.querySelector("#submit");
+        submitButtonButEl.remove();
+        let gamePEl = document.querySelector("p");
+        gamePEl.textContent = "";
+        lastScreen = "final";
+    }
+    else if (currentScreen === "highscores") {
+
+
+         // add a list for high scores
+        let highScore1liEL = document.getElementById("1-score");
+        let highScore2liEL = document.getElementById("2-score");
+        let highScore3liEL = document.getElementById("3-score");
+        let highScore4liEL = document.getElementById("4-score");
+        let highScore5liEL = document.getElementById("5-score");
+        
+        let highScoreOlEl = document.querySelector("ol");
+        highScoreOlEl.remove(); 
+        highScoreOlEl.remove(); 
+        highScore1liEL.remove(); 
+        highScore2liEL.remove(); 
+        highScore3liEL.remove();    
+        highScore4liEL.remove(); 
+        highScore5liEL.remove(); 
+    
+        let buttonHolderDivEl = document.querySelector("#button-holder");
+        buttonHolderDivEl.remove();
+     
+      
+    }
+  
+}// hideScreen
 
 
 let buttonHandler = function(event) {
     //Start button was hit.
     //setup HTML for question portion
     console.log(event.target);
-    //debugger;
- 
+   
+
     if (event.target.id === "start-button") {
         console.log("event.id = start-button");
-      
-        let gameDivEl = document.querySelector(".game-surface>div");
-        let gameh2El = document.querySelector(".game-surface>div>h2");
-        let gamePEl = document.querySelector("p");
-        // we don't need the start button for now...so hide it
-        let introButEl = document.querySelector("button");
-        introButEl.style.display = 'none';
 
-        gameh2El.textContent = "We are in questions now!!!!!!";
-        //turn on the timer
         startTimer = true;
-        //timers();
-        //let timerID = setInterval(function() {timerFunction(this);}, 1000);
-        //time to ask questions
+       
+    
+        hideScreen("intro");
         drawQuestionUI();
-      
-
     } 
     // clicked the submit button to store initials
 
@@ -541,14 +587,15 @@ let buttonHandler = function(event) {
         //let initialText = nameInputEl.getAttribute("TEXT");
         console.log("Initials: " + nameInput);
         // pass the name to the drawHighScoresUI
+        hideScreen("final");
         drawHighScoresUI(nameInput);
         
     }
     else if ((event.target.id ==="ans1")|| (event.target.id ==="ans2")||(event.target.id ==="ans3")||(event.target.id ==="ans4")) {
         isCorrect(event);
-        console.log("clicked an answer button going to isCorrect()");
+       // console.log("clicked an answer button going to isCorrect()");
         // lets turn off buttons until the new question
-         
+       
         document.querySelector("#ans1").disabled = true;
         document.querySelector("#ans2").disabled = true;
         document.querySelector("#ans3").disabled = true;
@@ -556,10 +603,36 @@ let buttonHandler = function(event) {
     
     }
     else if (event.target.id === "go-back") {
-        console.log("Gobackclicked!!!!");
-        location.reload();
+        console.log("Go back clicked!!!!");
+    
 
+        // we hit go back...what was the last page
+        //if it was high score restart
+        // otherwise go back to lastPage
+      
+        if(lastScreen === "question") {
+            // since we are asking questions turn on the timer again
+            startTimer = true;
+            hideScreen("highscores");
+            drawQuestionUI();
+            
+        }
+         else if (lastScreen === "highscores"  && gameOver === true) {
+            //reset the game
+           // hideScreen("highscores");
+          
+            location.reload();
 
+        }
+         else if (lastScreen === "intro") {
+            hideScreen("highscores");
+            drawIntroUI();
+        }
+         else if (lastScreen === "final") {
+            hideScreen("highscores");
+            drawFinalScoreUI();
+        }
+        
     }
     else if (event.target.id === "clear-high-scores") {
         console.log("ClearHighScores!!!!!!");
@@ -589,9 +662,17 @@ let buttonHandler = function(event) {
     
     }
     else if (event.target.id === "high-score-title") {
-        debugger;
-        //drawHighScoresUI();
+  
+        console.log(event.target);
         console.log("high score clicked");
+        // pause time while in high score screen
+        startTimer = false;
+        lastScreen = currentScreen;
+        hideScreen(currentScreen);
+
+        //new current screen
+        currentScreen = "highscores";
+        drawHighScoresUI();
 
     }
 
@@ -600,11 +681,10 @@ let buttonHandler = function(event) {
 
 
 //Function calls
-drawIntroUI();
+initialSetup();
 
 
 
 
 // Event Listeners
-gameSurfaceEl.addEventListener("click", buttonHandler);
-gameHighScoreTitle.addEventListener("click", buttonHandler)
+document.addEventListener("click", buttonHandler)

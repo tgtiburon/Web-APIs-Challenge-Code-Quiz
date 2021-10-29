@@ -119,6 +119,15 @@ button:hover {
     color: var(--color5);
     margin-top: 20px;
 }
+#button-holder {
+    display:flex;
+    min-width: 50%;
+}
+input {
+    font-size: 2vw;
+    color:var(--color3);
+}
+
 #game-div li {
     /* border:3px solid red; */
     font-size: 3vw;
