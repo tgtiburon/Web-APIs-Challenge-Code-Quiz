@@ -4,6 +4,7 @@ console.log("Script.js Loaded");
 // references to document items
 let gameSurfaceEl = document.querySelector(".game-surface");
 let introButEl = document.querySelector("start-button");
+let gameHighScoreTitle = document.querySelector(".high-score-title");
 
 // Global variables
 let playerScore = 0;
@@ -14,6 +15,7 @@ let noAnswer = true;
 let currentQuestion = 0;
 let numCorrect = 0;
 let finalScore = 0;
+let currentScreen = "intro";
 
 
 
@@ -116,8 +118,8 @@ let questionObjArr = [
 ];
 
 let totalQuestions = questionObjArr.length;
-//  for debugging setting totalQuestions to 1
-//totalQuestions = 1;
+//  for debugging setting totalQuestions to 3
+totalQuestions = 3;
 console.log(questionObjArr);
 
 //ORIGINAL WORKED
@@ -170,7 +172,7 @@ let timerFunction = function() {
 let drawIntroUI = function() {
    
     
-        gameSurfaceEl.setAttribute("style", "background-color:lightgrey");
+       // gameSurfaceEl.setAttribute("style", "background-color:lightgrey");
         // create the start screen
        
         let gameDivEl = document.createElement("div");
@@ -227,6 +229,95 @@ let askQuestion = function() {
         ans4ButtonButEl.textContent = questionObjArr[i].answer4;
 
 }; // end askQuestions
+
+let isCorrect = function(event) {
+   
+    let i = currentQuestion;
+
+    if (event.target.id === "ans1") {
+        //pickedAnswer = 1;
+        temp = questionObjArr[i].answer1;
+    }
+    if (event.target.id === "ans2") {
+       //pickedAnswer = 2;
+       temp = questionObjArr[i].answer2;
+    }
+    if (event.target.id === "ans3") {
+        //pickedAnswer = 3;
+        temp = questionObjArr[i].answer3;
+    }
+    if (event.target.id === "ans4") {
+        //pickedAnswer = 4;
+        temp = questionObjArr[i].answer4;
+    }
+  
+    let correctAnswer = questionObjArr[i].corrAnswer;
+    if (correctAnswer === temp) {
+        
+        numCorrect++;
+        console.log("You got this many correct " + numCorrect);
+       //currentQuestion ++;
+      //  timeLeft = timeLeft + 2;
+      // Correct!
+      let boolCorrectText = document.querySelector("#bool-correct-text");
+      boolCorrectText.textContent = "Correct!";
+      boolCorrectText.setAttribute("style", "color:green");
+
+      var timeOut = setTimeout(function() {
+    
+            boolCorrectText.setAttribute("style", "visibility:hidden;");
+       
+        //askQuestion();
+             // see if that was the last question
+             if (currentQuestion >= (totalQuestions-1))
+             {
+                 
+                 // Game over turn off timer
+                 startTimer = false;
+                 drawFinalScoreUI();
+ 
+             } else {
+ 
+                 currentQuestion++;
+                 askQuestion();
+             }
+        
+        },1000);
+   
+    } 
+    else //User got it wrong
+    {
+        // take time away
+       //currentQuestion ++;
+        timeLeft = timeLeft -5;
+        // Incorrect
+        let boolCorrectText = document.querySelector("#bool-correct-text");
+        boolCorrectText.textContent = "Wrong!";
+        boolCorrectText.setAttribute("style", "color:red");
+
+        var timeOut = setTimeout(function() {
+    
+            boolCorrectText.setAttribute("style", "visibility:hidden;");
+          
+            
+              // see if that was the last question
+            if (currentQuestion >= (totalQuestions-1))
+            {
+                
+                // Game over turn off timer
+                startTimer = false;
+                drawFinalScoreUI();
+
+            } else {
+
+                currentQuestion++;
+                askQuestion();
+            }
+        
+            },1000);
+
+    }   
+}// end isCorrect()
 
 let drawQuestionUI = function() {
    
@@ -311,9 +402,9 @@ let drawHighScoresUI = function(nameInput) {
     clearHighScoresButEl.id = "clear-high-scores";
     buttonHolderDivEl.appendChild(goBackButtonButEl);
     buttonHolderDivEl.appendChild(clearHighScoresButEl);
-    goBackButtonButEl.setAttribute("style", "color: blue");
+   // goBackButtonButEl.setAttribute("style", "color: blue");
     goBackButtonButEl.textContent = "Go Back"
-    clearHighScoresButEl.setAttribute("style", "color: blue");
+   // clearHighScoresButEl.setAttribute("style", "color: blue");
     clearHighScoresButEl.textContent = "Clear High Scores"
 
 
@@ -412,99 +503,14 @@ let drawFinalScoreUI = function() {
 
 }
 
-let isCorrect = function(event) {
-   
-    let i = currentQuestion;
 
-    if (event.target.id === "ans1") {
-        //pickedAnswer = 1;
-        temp = questionObjArr[i].answer1;
-    }
-    if (event.target.id === "ans2") {
-       //pickedAnswer = 2;
-       temp = questionObjArr[i].answer2;
-    }
-    if (event.target.id === "ans3") {
-        //pickedAnswer = 3;
-        temp = questionObjArr[i].answer3;
-    }
-    if (event.target.id === "ans4") {
-        //pickedAnswer = 4;
-        temp = questionObjArr[i].answer4;
-    }
-  
-    let correctAnswer = questionObjArr[i].corrAnswer;
-    if (correctAnswer === temp) {
-        
-        numCorrect++;
-        console.log("You got this many correct " + numCorrect);
-       //currentQuestion ++;
-      //  timeLeft = timeLeft + 2;
-      // Correct!
-      let boolCorrectText = document.querySelector("#bool-correct-text");
-      boolCorrectText.textContent = "Correct!";
-      boolCorrectText.setAttribute("style", "color:green");
-
-      var timeOut = setTimeout(function() {
-    
-            boolCorrectText.setAttribute("style", "visibility:hidden;");
-       
-        //askQuestion();
-             // see if that was the last question
-             if (currentQuestion >= (totalQuestions-1))
-             {
-                 
-                 // Game over turn off timer
-                 startTimer = false;
-                 drawFinalScoreUI();
- 
-             } else {
- 
-                 currentQuestion++;
-                 askQuestion();
-             }
-        
-        },1000);
-   
-    } 
-    else //User got it wrong
-    {
-        // take time away
-       //currentQuestion ++;
-        timeLeft = timeLeft -5;
-        // Incorrect
-        let boolCorrectText = document.querySelector("#bool-correct-text");
-        boolCorrectText.textContent = "Wrong!";
-        boolCorrectText.setAttribute("style", "color:red");
-
-        var timeOut = setTimeout(function() {
-    
-            boolCorrectText.setAttribute("style", "visibility:hidden;");
-          
-            
-              // see if that was the last question
-            if (currentQuestion >= (totalQuestions-1))
-            {
-                
-                // Game over turn off timer
-                startTimer = false;
-                drawFinalScoreUI();
-
-            } else {
-
-                currentQuestion++;
-                askQuestion();
-            }
-        
-            },1000);
-
-    }   
-}// end isCorrect()
 
 
 let buttonHandler = function(event) {
     //Start button was hit.
     //setup HTML for question portion
+    console.log(event.target);
+    //debugger;
  
     if (event.target.id === "start-button") {
         console.log("event.id = start-button");
@@ -527,6 +533,7 @@ let buttonHandler = function(event) {
 
     } 
     // clicked the submit button to store initials
+
     else if (event.target.id === "submit") {
         
 
@@ -567,7 +574,7 @@ let buttonHandler = function(event) {
                 savedScores[k] = (newScore);
             }
             localStorage.setItem("scores", JSON.stringify(savedScores));
-              // debugger;
+             
                 let highScore1liEL = document.getElementById("1-score");
                 let highScore2liEL = document.getElementById("2-score");
                 let highScore3liEL = document.getElementById("3-score");
@@ -580,6 +587,12 @@ let buttonHandler = function(event) {
                 highScore4liEL.textContent = "Name 0";
                 highScore5liEL.textContent = "Name 0";
     
+    }
+    else if (event.target.id === "high-score-title") {
+        debugger;
+        //drawHighScoresUI();
+        console.log("high score clicked");
+
     }
 
 }//end buttonHandler()
@@ -594,3 +607,4 @@ drawIntroUI();
 
 // Event Listeners
 gameSurfaceEl.addEventListener("click", buttonHandler);
+gameHighScoreTitle.addEventListener("click", buttonHandler)
