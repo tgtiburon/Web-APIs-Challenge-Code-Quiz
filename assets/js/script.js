@@ -18,6 +18,7 @@ let finalScore = 0;
 let currentScreen = "intro";
 let lastScreen = "intro";
 let gameOver = false;
+let isScoreSaved = false;
 
 
 
@@ -126,7 +127,7 @@ let totalQuestions = questionObjArr.length;
 //
 //SET totalQuestions to 10 before finishing
 
-totalQuestions = 10;
+totalQuestions = 2;
 //console.log(questionObjArr);
 
 //ORIGINAL WORKED
@@ -290,8 +291,9 @@ let isCorrect = function(event) {
                  // Game over turn off timer
                  startTimer = false;
                  // game over
-                 gameOver = true;
+                 
                  drawFinalScoreUI();
+                // gameOver = true;
  
              } else {
                 // itterate the question
@@ -320,8 +322,9 @@ let isCorrect = function(event) {
             {  
                 // Game over turn off timer
                 startTimer = false;
-                gameOver = true;
+                
                 drawFinalScoreUI();
+               // gameOver = true;
 
             } else {
 
@@ -366,6 +369,7 @@ let drawQuestionUI = function() {
 
 let drawHighScoresUI = function(nameInput) {
   
+
   // PRETTY SURE I CAN USE QUERY SELECT
   let gameDivEl = document.querySelector("div");
   //let gameh2El = document.querySelector("h2");
@@ -415,7 +419,15 @@ let drawHighScoresUI = function(nameInput) {
     clearHighScoresButEl.id = "clear-high-scores";
     buttonHolderDivEl.appendChild(goBackButtonButEl);
     buttonHolderDivEl.appendChild(clearHighScoresButEl);
-    goBackButtonButEl.textContent = "Go Back"
+    if(gameOver === true) {
+        goBackButtonButEl.textContent = "New Attempt"
+
+    }
+    else {
+        goBackButtonButEl.textContent = "Go Back"
+
+    }
+   
     clearHighScoresButEl.textContent = "Clear High Scores"
 
    let savedScores = localStorage.getItem("scores");
@@ -434,25 +446,39 @@ let drawHighScoresUI = function(nameInput) {
 
     }
     // Lets see if the new score is higher and reorder the array
-    score = timeLeft;
-    let name = nameInput;
-    const newScore =  {name, score};
-    // add the new info to the array
-    savedScores[5] = (newScore);
-    // lets sort the array
-    savedScores.sort((firstItem, secondItem) =>  secondItem.score - firstItem.score);
-    // now set the list back down to 5 members
-    savedScores.splice(5);
+    // score = timeLeft;
+    // let name = nameInput;
+    // if (name === "")
+    // { name = "Name"};
+    // const newScore =  {name, score};
+    // // add the new info to the array
+    // savedScores[5] = (newScore);
+    // // lets sort the array
+    // savedScores.sort((firstItem, secondItem) =>  secondItem.score - firstItem.score);
+    // // now set the list back down to 5 members
+    // savedScores.splice(5);
 
-    // print the high scores
-    highScore1liEL.textContent = (savedScores[0].name + " " + savedScores[0].score);
-    highScore2liEL.textContent = (savedScores[1].name + " " + savedScores[1].score);
-    highScore3liEL.textContent = (savedScores[2].name + " " + savedScores[2].score);
-    highScore4liEL.textContent = (savedScores[3].name + " " + savedScores[3].score);
-    highScore5liEL.textContent = (savedScores[4].name + " " + savedScores[4].score);
+    // // print the high scores
+    // highScore1liEL.textContent = (savedScores[0].name + " " + savedScores[0].score);
+    // highScore2liEL.textContent = (savedScores[1].name + " " + savedScores[1].score);
+    // highScore3liEL.textContent = (savedScores[2].name + " " + savedScores[2].score);
+    // highScore4liEL.textContent = (savedScores[3].name + " " + savedScores[3].score);
+    // highScore5liEL.textContent = (savedScores[4].name + " " + savedScores[4].score);
     
-     // Use localStorage to save high scores and retrieve them
-    saveHighScores(savedScores);
+    //  // Use localStorage to save high scores and retrieve them
+    // if (savedScores == true) {
+    //     
+    //     saveHighScores(savedScores);
+
+    // }
+      // print the high scores
+      highScore1liEL.textContent = (savedScores[0].name + " " + savedScores[0].score);
+      highScore2liEL.textContent = (savedScores[1].name + " " + savedScores[1].score);
+      highScore3liEL.textContent = (savedScores[2].name + " " + savedScores[2].score);
+      highScore4liEL.textContent = (savedScores[3].name + " " + savedScores[3].score);
+      highScore5liEL.textContent = (savedScores[4].name + " " + savedScores[4].score);
+     
+
     currentScreen = "highscores";
     
 }; //end drawHighScoresUI
@@ -482,10 +508,13 @@ let drawFinalScoreUI = function() {
 
     let submitButtonButEl = document.createElement("button");
     submitButtonButEl.id = "submit";
-    submitButtonButEl.textContent = "Submit";
+    submitButtonButEl.textContent = "Submit Name";
     gameDivEl.appendChild(submitButtonButEl);
 
     currentScreen = "final";
+
+   
+    
 
 }
 
@@ -581,14 +610,55 @@ let buttonHandler = function(event) {
     // clicked the submit button to store initials
 
     else if (event.target.id === "submit") {
-        
+        debugger;
 
-        let nameInput = document.querySelector("INPUT").value;
+        let nameInputEl = document.querySelector("INPUT").value;
         //let initialText = nameInputEl.getAttribute("TEXT");
-        console.log("Initials: " + nameInput);
+
+        /// EXPERIMENTAL
+        //let nameInput = document.querySelector("INPUT").value;
+        let score = timeLeft;
+        let name = "";
+        name = nameInputEl;
+        if (name === "")
+        { name = "Name"};
+        const newScore =  {name, score};
+        // add the new info to the array
+        let savedScores = localStorage.getItem("scores");
+  
+        if (!savedScores) {
+            savedScores = [];
+          for (let k = 0; k < 5; k++) {
+            score = 0;
+    
+            let name = "Name";
+            const newScore =  {name, score};
+            savedScores[k] = (newScore);    
+          }
+        } else {
+            savedScores = JSON.parse(savedScores);
+    
+        }
+        savedScores[5] = (newScore);
+        // lets sort the array
+        savedScores.sort((firstItem, secondItem) =>  secondItem.score - firstItem.score);
+        // now set the list back down to 5 members
+        savedScores.splice(5);
+
+  
+    
+     // Use localStorage to save high scores and retrieve them
+   
+       
+        saveHighScores(savedScores);
+
+
+        console.log("Initials: " + nameInputEl);
         // pass the name to the drawHighScoresUI
         hideScreen("final");
-        drawHighScoresUI(nameInput);
+        gameOver=true;
+        drawHighScoresUI(name);
+
         
     }
     else if ((event.target.id ==="ans1")|| (event.target.id ==="ans2")||(event.target.id ==="ans3")||(event.target.id ==="ans4")) {
@@ -604,7 +674,7 @@ let buttonHandler = function(event) {
     }
     else if (event.target.id === "go-back") {
         console.log("Go back clicked!!!!");
-    
+  
 
         // we hit go back...what was the last page
         //if it was high score restart
@@ -617,7 +687,7 @@ let buttonHandler = function(event) {
             drawQuestionUI();
             
         }
-         else if (lastScreen === "highscores"  && gameOver === true) {
+         else if ( gameOver === true) {
             //reset the game
            // hideScreen("highscores");
           
@@ -630,7 +700,9 @@ let buttonHandler = function(event) {
         }
          else if (lastScreen === "final") {
             hideScreen("highscores");
+            
             drawFinalScoreUI();
+            lastScreen = "highscores";
         }
         
     }
