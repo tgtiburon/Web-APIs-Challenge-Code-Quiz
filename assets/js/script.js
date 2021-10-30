@@ -127,7 +127,7 @@ let totalQuestions = questionObjArr.length;
 //
 //SET totalQuestions to 10 before finishing
 
-totalQuestions = 2;
+totalQuestions = 10;
 //console.log(questionObjArr);
 
 //ORIGINAL WORKED
@@ -610,7 +610,7 @@ let buttonHandler = function(event) {
     // clicked the submit button to store initials
 
     else if (event.target.id === "submit") {
-        debugger;
+        
 
         let nameInputEl = document.querySelector("INPUT").value;
         //let initialText = nameInputEl.getAttribute("TEXT");
