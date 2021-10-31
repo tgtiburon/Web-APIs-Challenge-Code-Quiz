@@ -20,6 +20,12 @@ let lastScreen = "intro";
 let gameOver = false;
 let isScoreSaved = false;
 
+let pauseTimer = false;
+
+// HACK
+//let timerID = setInterval(function() {toggleTimer();}, 1000);
+//clearInterval(timerID);
+
 
 
 // Questions
@@ -121,61 +127,80 @@ let questionObjArr = [
 ];
 
 let totalQuestions = questionObjArr.length;
-//  for debugging setting totalQuestions to 3
-// remove this
-//
-//
-//SET totalQuestions to 10 before finishing
 
-totalQuestions = 10;
-//console.log(questionObjArr);
+// Debug stuff
+timeLeft = 10;
 
-//ORIGINAL WORKED
-let timerID = setInterval(function() {timerFunction();}, 1000);
+totalQuestions = 3;
+
 
 // Functions
 
- /* let timers = function() {
+  let toggleTimer = function() {
 
-     if(startTimer) {
-         let countdown = function() {
-         // do stuff
-         counter.textContent = count;
-         count--;
-         if(count<0) {
-              startTimer = false;
-             //count = 5;
-             clearInterval(timerID);
-             console.log('finished');
-         }
-        }
-     }
-     let timerID = setInterval(function() {timerFunction();}, 1000);
-     
- }// end timers */
-
-let timerFunction = function() {
-   // console.log("In timerfunction")
-    
-    if  (startTimer)  {
-
-       // console.log("One second has passed");
-        let timerH2El = document.querySelector(".time-left");
-        timerH2El.textContent = "Time Left: " + timeLeft;
-        
-        if (timeLeft<= 0) {
-            timeLeft = 0;
-            drawFinalScoreUI ();
-            startTimer = false;
-           // timers();
-            
-        }
-        timeLeft = timeLeft -1;
-
-    } 
    
-} // end timerFunction
+    if (startTimer === true ) {
+        //startTimer = true;
+        let countDown = function() {
+          
+            console.log("timeLeft= " + timeLeft);
+            if (pauseTimer === false) {
+                timeLeft = timeLeft -1;
+        
+               };
+            if(timeLeft < 0) {timeLeft = 0;}   
+            
+            let timerH2El = document.querySelector(".time-left");
+            timerH2El.textContent = "Time Left: " + timeLeft;
+            //console.log ("starting timer");
 
+            if (timeLeft <= 0) {
+                startTimer = false;
+                   
+                timeLeft = 0;
+                clearInterval(timerID);
+                timerID = null;
+                //hideScreen(currentScreen);
+                drawFinalScoreUI ();       
+            }
+        }
+      
+        let timerID= setInterval(countDown, 1000);
+       
+    }
+    else {
+
+        //let timerID = setInterval(function() {toggleTimer();}, 1000);
+        //startTimer = true;
+    }
+     
+ }// end toggleTimer 
+
+// let timerFunction = function() {
+
+//    if  (startTimer)  {
+//        if (pauseTimer === false) {
+//         timeLeft = timeLeft -1;
+
+//        };
+        
+//         let timerH2El = document.querySelector(".time-left");
+//         timerH2El.textContent = "Time Left: " + timeLeft;
+        
+//        if (timeLeft<= 0) {
+//         startTimer = false;   
+//            timeLeft = 0;
+//             drawFinalScoreUI ();
+           
+//         }
+//     }   
+// } // end timerFunction
+
+/*  
+    initialSetup()  
+    => called only at the beginning  to load stuff once
+    args: none
+*/
 let initialSetup = function () {
 
     // load elements that will be omnipresent
@@ -198,11 +223,15 @@ let initialSetup = function () {
     
     drawIntroUI(); 
 }
-
+/*  
+    drawIntroUI()  
+    => used to draw the introduction screen
+    args: none
+*/
 
 let drawIntroUI = function() {
    
-        // create the start screen
+        
        
         let gameDivEl = document.querySelector("#game-div");
         let gameh2El = document.querySelector("#game-div>h2");
@@ -221,19 +250,25 @@ let drawIntroUI = function() {
 
         gameh2El.textContent = "Welcome to the game";
         gamePEl.textContent = "This game is designed to help you study Web APIs. If you get a question incorrect you lose 5 seconds on the clock. If the clock hits zero, the game is over!"; 
-        //introButEl.innerHTML = "Press to start the quiz!";  
        
         currentScreen = "intro";
 
 } //end drawIntroUI()
 
 
+/*  
+    askQuestions() 
+    => used to update to the next question in the list
+    args: none
+*/
 let askQuestion = function() {
     
         let i = currentQuestion;
         let gameh2El = document.querySelector("#h2-game");
         let gamePEl = document.querySelector("p");
         let gameDivEl = document.querySelector("#game-div");
+
+
         let ans1ButtonButEl = document.querySelector("#ans1");
         let ans2ButtonButEl = document.querySelector("#ans2");
         let ans3ButtonButEl = document.querySelector("#ans3");
@@ -253,8 +288,17 @@ let askQuestion = function() {
         ans3ButtonButEl.textContent = questionObjArr[i].answer3;
         ans4ButtonButEl.textContent = questionObjArr[i].answer4;
 
+
+
+        
+
 }; // end askQuestions
 
+/*  
+    isCorrect()  
+    => used to check to see if the user picked the correct answer
+    args: event  stores which button was clicked
+*/
 let isCorrect = function(event) {
    
     let i = currentQuestion;
@@ -274,6 +318,7 @@ let isCorrect = function(event) {
   // get the correct answer
     let correctAnswer = questionObjArr[i].corrAnswer;
     // if the user is correct
+ 
     if (correctAnswer === temp) {
         
         // tell them they are correct
@@ -286,15 +331,16 @@ let isCorrect = function(event) {
             boolCorrectText.setAttribute("style", "visibility:hidden;");
        
              // see if that was the last question
-             if (currentQuestion >= (totalQuestions-1))
+             if (currentQuestion >= (totalQuestions-1) || timeLeft <= 0)
              { 
-                 // Game over turn off timer
                  startTimer = false;
-                 // game over
-                 
-                 drawFinalScoreUI();
-                // gameOver = true;
- 
+                 //DEBUG
+                 //toggleTimer();
+                 playerScore = timeLeft;
+                 timeLeft = 0;
+
+                 //  NOT SURE ABOUT THIS
+                // drawFinalScoreUI();
              } else {
                 // itterate the question
                  currentQuestion++;
@@ -306,8 +352,9 @@ let isCorrect = function(event) {
     else //User got it wrong
     {
         // take time away
-       //currentQuestion ++;
         timeLeft = timeLeft -5;
+        
+
         // Incorrect
         let boolCorrectText = document.querySelector("#bool-correct-text");
         boolCorrectText.textContent = "Wrong!";
@@ -315,19 +362,23 @@ let isCorrect = function(event) {
 
         // Wait a second before moving on.
         var timeOut = setTimeout(function() {
-    
             boolCorrectText.setAttribute("style", "visibility:hidden;");
-              // see if that was the last question
-            if (currentQuestion >= (totalQuestions-1))
+            // see if that was the last question
+            if (currentQuestion >= (totalQuestions-1) || timeLeft <= 0)
             {  
                 // Game over turn off timer
                 startTimer = false;
+                //toggleTimer();
+                playerScore = timeLeft;
+                timeLeft = 0;
+
                 
-                drawFinalScoreUI();
-               // gameOver = true;
+
+                //NOT SURE ABOUT THIS
+               // drawFinalScoreUI();
+                // gameOver = true;
 
             } else {
-
                 currentQuestion++;
                 askQuestion();
             }
@@ -336,6 +387,11 @@ let isCorrect = function(event) {
     }   
 }// end isCorrect()
 
+/*  
+    drawQuestionUI()  
+    => used to draw the first question.
+    args: none
+*/
 let drawQuestionUI = function() {
  
     let gameDivEl = document.querySelector("#game-div");
@@ -367,27 +423,20 @@ let drawQuestionUI = function() {
             
 }; // end drawQuestionUI
 
+/*  
+    drawHighScoreUI()  
+    => used to draw the high score screen
+    args: nameInput    name of the user
+*/
+
 let drawHighScoresUI = function(nameInput) {
   
-
-  // PRETTY SURE I CAN USE QUERY SELECT
   let gameDivEl = document.querySelector("div");
-  //let gameh2El = document.querySelector("h2");
   let gameh2El = document.querySelector("#game-div>h2");
   let gamePEl = document.querySelector("p");
   gamePEl.textContent = "";
-  
-  // I DONT THINK I NEED THESE TWO
-  //gameSurfaceEl.appendChild(gameDivEl);
-
-  //gameDivEl.appendChild(gameh2El);
-    //Update stuff we do need!
-    //gameh2El = document.querySelector("#h2-game");
-    // or this line
-    //gameDivEl.appendChild(gameh2El);
-    gameh2El.textContent = "High Scores";
+  gameh2El.textContent = "High Scores";
     
-
     // add a list for high scores
     gameDivEl = document.querySelector("#game-div");
     let highScoreOlEl = document.createElement("ol");
@@ -421,22 +470,17 @@ let drawHighScoresUI = function(nameInput) {
     buttonHolderDivEl.appendChild(clearHighScoresButEl);
     if(gameOver === true) {
         goBackButtonButEl.textContent = "New Attempt"
-
     }
     else {
         goBackButtonButEl.textContent = "Go Back"
-
     }
-   
-    clearHighScoresButEl.textContent = "Clear High Scores"
-
-   let savedScores = localStorage.getItem("scores");
+        clearHighScoresButEl.textContent = "Clear High Scores"
+        let savedScores = localStorage.getItem("scores");
   
     if (!savedScores) {
         savedScores = [];
       for (let k = 0; k < 5; k++) {
         score = 0;
-
         let name = "Name";
         const newScore =  {name, score};
         savedScores[k] = (newScore);    
@@ -445,50 +489,35 @@ let drawHighScoresUI = function(nameInput) {
         savedScores = JSON.parse(savedScores);
 
     }
-    // Lets see if the new score is higher and reorder the array
-    // score = timeLeft;
-    // let name = nameInput;
-    // if (name === "")
-    // { name = "Name"};
-    // const newScore =  {name, score};
-    // // add the new info to the array
-    // savedScores[5] = (newScore);
-    // // lets sort the array
-    // savedScores.sort((firstItem, secondItem) =>  secondItem.score - firstItem.score);
-    // // now set the list back down to 5 members
-    // savedScores.splice(5);
 
-    // // print the high scores
-    // highScore1liEL.textContent = (savedScores[0].name + " " + savedScores[0].score);
-    // highScore2liEL.textContent = (savedScores[1].name + " " + savedScores[1].score);
-    // highScore3liEL.textContent = (savedScores[2].name + " " + savedScores[2].score);
-    // highScore4liEL.textContent = (savedScores[3].name + " " + savedScores[3].score);
-    // highScore5liEL.textContent = (savedScores[4].name + " " + savedScores[4].score);
-    
-    //  // Use localStorage to save high scores and retrieve them
-    // if (savedScores == true) {
-    //     
-    //     saveHighScores(savedScores);
-
-    // }
-      // print the high scores
-      highScore1liEL.textContent = (savedScores[0].name + " " + savedScores[0].score);
-      highScore2liEL.textContent = (savedScores[1].name + " " + savedScores[1].score);
-      highScore3liEL.textContent = (savedScores[2].name + " " + savedScores[2].score);
-      highScore4liEL.textContent = (savedScores[3].name + " " + savedScores[3].score);
-      highScore5liEL.textContent = (savedScores[4].name + " " + savedScores[4].score);
-     
+    // print the high scores
+    highScore1liEL.textContent = (savedScores[0].name + " " + savedScores[0].score);
+    highScore2liEL.textContent = (savedScores[1].name + " " + savedScores[1].score);
+    highScore3liEL.textContent = (savedScores[2].name + " " + savedScores[2].score);
+    highScore4liEL.textContent = (savedScores[3].name + " " + savedScores[3].score);
+    highScore5liEL.textContent = (savedScores[4].name + " " + savedScores[4].score);
 
     currentScreen = "highscores";
     
 }; //end drawHighScoresUI
 
+/*  
+    savedHighScores()  
+    => used to saved the high score in the savedScores object.
+    args: savedScores   ...scores saved as an object
+*/
 let saveHighScores = function(savedScores) {
     // shows as [object Object]
     //localStorage.setItem("tasks", tasks);
     localStorage.setItem("scores", JSON.stringify(savedScores));
   }//end saveTasks()
   
+  /*  
+    drawFinalScoreUI()  
+    => used to draw the final score of the game.
+        player can input their name
+    args: none
+*/
 let drawFinalScoreUI = function() {
 
     if (currentScreen === "question")
@@ -518,21 +547,21 @@ let drawFinalScoreUI = function() {
 
 }
 
-/* Function to clear the current screen to get ready to draw a new screen
-
-
+/*  
+    hideScreen()  
+    => used to hide the current screen so we can load
+        the High Scores screen.
+    args: currentScreen  -- passes the currentScreen to hide
 */
 
 let hideScreen = function(currentScreen) {
   
-
     if (currentScreen === "intro") {
         let introButEl = document.querySelector("#start-button");
         introButEl.remove();
         let gamePEl = document.querySelector("p"); 
         gamePEl.textContent = "";
         lastScreen = "intro";
-       
     }
     else if (currentScreen === "question") {
         let ans1ButtonButEl = document.querySelector("#ans1");
@@ -547,7 +576,6 @@ let hideScreen = function(currentScreen) {
         ans2ButtonButEl.remove();
         ans3ButtonButEl.remove(); 
         ans4ButtonButEl.remove(); 
-
 
         let boolCorrectText = document.querySelector("#bool-correct-text");
         boolCorrectText.remove();
@@ -584,39 +612,37 @@ let hideScreen = function(currentScreen) {
         highScore5liEL.remove(); 
     
         let buttonHolderDivEl = document.querySelector("#button-holder");
-        buttonHolderDivEl.remove();
-     
-      
+        buttonHolderDivEl.remove(); 
     }
   
 }// hideScreen
 
+/*  
+    buttnHandler()  
+    => used to handle the button clicks
+    args: none
+*/
 
 let buttonHandler = function(event) {
     //Start button was hit.
     //setup HTML for question portion
     console.log(event.target);
    
-
     if (event.target.id === "start-button") {
         console.log("event.id = start-button");
 
         startTimer = true;
-       
-    
+
+        toggleTimer();
         hideScreen("intro");
         drawQuestionUI();
     } 
     // clicked the submit button to store initials
-
     else if (event.target.id === "submit") {
+
+        //debugger;
         
-
         let nameInputEl = document.querySelector("INPUT").value;
-        //let initialText = nameInputEl.getAttribute("TEXT");
-
-        /// EXPERIMENTAL
-        //let nameInput = document.querySelector("INPUT").value;
         let score = timeLeft;
         let name = "";
         name = nameInputEl;
@@ -645,25 +671,19 @@ let buttonHandler = function(event) {
         // now set the list back down to 5 members
         savedScores.splice(5);
 
-  
-    
-     // Use localStorage to save high scores and retrieve them
-   
-       
+        // Use localStorage to save high scores and retrieve them
         saveHighScores(savedScores);
-
-
         console.log("Initials: " + nameInputEl);
         // pass the name to the drawHighScoresUI
         hideScreen("final");
         gameOver=true;
         drawHighScoresUI(name);
-
-        
+    
     }
     else if ((event.target.id ==="ans1")|| (event.target.id ==="ans2")||(event.target.id ==="ans3")||(event.target.id ==="ans4")) {
+       
         isCorrect(event);
-       // console.log("clicked an answer button going to isCorrect()");
+   
         // lets turn off buttons until the new question
        
         document.querySelector("#ans1").disabled = true;
@@ -674,23 +694,22 @@ let buttonHandler = function(event) {
     }
     else if (event.target.id === "go-back") {
         console.log("Go back clicked!!!!");
-  
-
         // we hit go back...what was the last page
         //if it was high score restart
         // otherwise go back to lastPage
-      
+
         if(lastScreen === "question") {
             // since we are asking questions turn on the timer again
-            startTimer = true;
+            //debug
+            pauseTimer = false;
+           // toggleTimer();
+           // startTimer = true;
             hideScreen("highscores");
             drawQuestionUI();
             
         }
          else if ( gameOver === true) {
-            //reset the game
-           // hideScreen("highscores");
-          
+           // if the game is over reload the game
             location.reload();
 
         }
@@ -700,7 +719,6 @@ let buttonHandler = function(event) {
         }
          else if (lastScreen === "final") {
             hideScreen("highscores");
-            
             drawFinalScoreUI();
             lastScreen = "highscores";
         }
@@ -710,11 +728,10 @@ let buttonHandler = function(event) {
         console.log("ClearHighScores!!!!!!");
         let savedScores = localStorage.getItem("scores");
         savedScores = JSON.parse(savedScores);
-        // lets put in dummy scores
+        // lets put in dummy scores since they cleared scores.
             for (let k = 0; k < 5; k++) {
-                score = 0;
-    
-                let name = "Name";
+               score = "";
+               name = "";
                 const newScore =  {name, score};
                 savedScores[k] = (newScore);
             }
@@ -726,11 +743,11 @@ let buttonHandler = function(event) {
                 let highScore4liEL = document.getElementById("4-score");
                 let highScore5liEL = document.getElementById("5-score");
                
-                highScore1liEL.textContent = "Name 0";
-                highScore2liEL.textContent = "Name 0";
-                highScore3liEL.textContent = "Name 0";
-                highScore4liEL.textContent = "Name 0";
-                highScore5liEL.textContent = "Name 0";
+                highScore1liEL.textContent = "";
+                highScore2liEL.textContent = "";
+                highScore3liEL.textContent = "";
+                highScore4liEL.textContent = "";
+                highScore5liEL.textContent = "";
     
     }
     else if (event.target.id === "high-score-title") {
@@ -738,7 +755,10 @@ let buttonHandler = function(event) {
         console.log(event.target);
         console.log("high score clicked");
         // pause time while in high score screen
-        startTimer = false;
+        //DEBUG
+        pauseTimer = true;
+       // toggleTimer();
+        //startTimer = false;
         lastScreen = currentScreen;
         hideScreen(currentScreen);
 
