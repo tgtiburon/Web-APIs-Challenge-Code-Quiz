@@ -9,7 +9,7 @@
 
 
 ## Purpose
-A website that quizzes the user over Web API information.  Could be used to prepairing for a technical interview.  
+A website that quizzes the user over Web API information.  Could be used to prepare for a technical interview.  
 
 
 ## Built with
@@ -20,7 +20,6 @@ A website that quizzes the user over Web API information.  Could be used to prep
 
 ## Demonstrates the following skills:
 
-## 
     * Working with an array of Objects.
     * Working with arrays.
     * Working with strings.
@@ -33,6 +32,7 @@ A website that quizzes the user over Web API information.  Could be used to prep
     * Use of a timer to track a countdown.  Timer is paused when the
       the user checks high score and starts working again when they
       return to the quiz.
+    * Responsive design.
 
 
 
