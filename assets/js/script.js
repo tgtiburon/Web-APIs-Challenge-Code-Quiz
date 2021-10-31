@@ -1,5 +1,3 @@
-console.log("Script.js Loaded");
-
 
 // references to document items
 let gameSurfaceEl = document.querySelector(".game-surface");
@@ -10,27 +8,14 @@ let gameHighScoreTitle = document.querySelector(".high-score-title");
 let playerScore = 0;
 let timeLeft = 100;
 let startTimer = false;
-let noAnswer = true;
-
 let currentQuestion = 0;
-let numCorrect = 0;
-let finalScore = 0;
 let currentScreen = "intro";
 let lastScreen = "intro";
 let gameOver = false;
-let isScoreSaved = false;
-
 let pauseTimer = false;
-
 let numOfScores = 0;
 
-// HACK
-//let timerID = setInterval(function() {toggleTimer();}, 1000);
-//clearInterval(timerID);
-
-
-
-// Questions
+// Questions stored as an object
 
 let questionObjArr = [
     
@@ -131,21 +116,33 @@ let questionObjArr = [
 let totalQuestions = questionObjArr.length;
 
 // Debug stuff
-timeLeft = 19;
+//
+//
+//
 
-totalQuestions = 2;
+timeLeft = 300;
+
+totalQuestions = 3;
+
+//
+//
+//
 
 
 // Functions
 
-  let toggleTimer = function() {
+/*  
+    toggleTimer()  
+    => called to toggle the timer on and off
+    args: none
+*/
 
-   
+  let toggleTimer = function() {
     if (startTimer === true ) {
         //startTimer = true;
         let countDown = function() {
           
-            console.log("timeLeft= " + timeLeft);
+           ////////////////////////////////////////////////////////////// console.log("timeLeft= " + timeLeft);
             if (pauseTimer === false) {
                 timeLeft = timeLeft -1;
         
@@ -154,15 +151,13 @@ totalQuestions = 2;
             
             let timerH2El = document.querySelector(".time-left");
             timerH2El.textContent = "Time Left: " + timeLeft;
-            //console.log ("starting timer");
+           
 
             if (timeLeft <= 0) {
                 startTimer = false;
-                   
                 timeLeft = 0;
                 clearInterval(timerID);
                 timerID = null;
-                //hideScreen(currentScreen);
                 let timerH2El = document.querySelector(".time-left");
                 timerH2El.textContent = "Final Score: " + playerScore;
                 
@@ -174,32 +169,12 @@ totalQuestions = 2;
        
     }
     else {
+        //If startTimer bool is false do nothing.
 
-        //let timerID = setInterval(function() {toggleTimer();}, 1000);
-        //startTimer = true;
     }
      
  }// end toggleTimer 
 
-// let timerFunction = function() {
-
-//    if  (startTimer)  {
-//        if (pauseTimer === false) {
-//         timeLeft = timeLeft -1;
-
-//        };
-        
-//         let timerH2El = document.querySelector(".time-left");
-//         timerH2El.textContent = "Time Left: " + timeLeft;
-        
-//        if (timeLeft<= 0) {
-//         startTimer = false;   
-//            timeLeft = 0;
-//             drawFinalScoreUI ();
-           
-//         }
-//     }   
-// } // end timerFunction
 
 /*  
     initialSetup()  
@@ -249,7 +224,7 @@ let drawIntroUI = function() {
         introButEl.textContent = "To start press!"; 
         introButEl.id = "start-button";
     
-        // timer
+        // timer text
         let timerH2El = document.querySelector(".time-left");
         timerH2El.textContent = "Time Left: " + timeLeft;
 
@@ -282,7 +257,8 @@ let askQuestion = function() {
         gameh2El.textContent = "Question #" + questionObjArr[i].questionNum;
         gamePEl.textContent = questionObjArr[i].questionText;
 
-        // eneable the buttons
+        // enable the buttons needed because we disable the buttons when user
+        // clicks and answer to stop them from multiple clicks
         document.querySelector("#ans1").disabled = false;
         document.querySelector("#ans2").disabled = false;
         document.querySelector("#ans3").disabled = false;
@@ -291,11 +267,7 @@ let askQuestion = function() {
         ans1ButtonButEl.textContent = questionObjArr[i].answer1;
         ans2ButtonButEl.textContent = questionObjArr[i].answer2;
         ans3ButtonButEl.textContent = questionObjArr[i].answer3;
-        ans4ButtonButEl.textContent = questionObjArr[i].answer4;
-
-
-
-        
+        ans4ButtonButEl.textContent = questionObjArr[i].answer4;      
 
 }; // end askQuestions
 
@@ -322,8 +294,8 @@ let isCorrect = function(event) {
     }
   // get the correct answer
     let correctAnswer = questionObjArr[i].corrAnswer;
+
     // if the user is correct
- 
     if (correctAnswer === temp) {
         
         // tell them they are correct
@@ -339,13 +311,9 @@ let isCorrect = function(event) {
              if (currentQuestion >= (totalQuestions-1) || timeLeft <= 0)
              { 
                  startTimer = false;
-                 //DEBUG
-                 //toggleTimer();
                  playerScore = timeLeft;
                  timeLeft = 0;
 
-                 //  NOT SURE ABOUT THIS
-                // drawFinalScoreUI();
              } else {
                 // itterate the question
                  currentQuestion++;
@@ -373,15 +341,8 @@ let isCorrect = function(event) {
             {  
                 // Game over turn off timer
                 startTimer = false;
-                //toggleTimer();
                 playerScore = timeLeft;
                 timeLeft = 0;
-
-                
-
-                //NOT SURE ABOUT THIS
-               // drawFinalScoreUI();
-                // gameOver = true;
 
             } else {
                 currentQuestion++;
@@ -457,12 +418,6 @@ let drawHighScoresUI = function(nameInput) {
     highScore5liEL.id = "5-score";
     
     gameDivEl.appendChild(highScoreOlEl);
-    // highScoreOlEl.appendChild(highScore1liEL);
-    // highScoreOlEl.appendChild(highScore2liEL);
-    // highScoreOlEl.appendChild(highScore3liEL);
-    // highScoreOlEl.appendChild(highScore4liEL);
-    // highScoreOlEl.appendChild(highScore5liEL);
-
     let buttonHolderDivEl = document.createElement("div");
     buttonHolderDivEl.id = "button-holder";
     gameDivEl.appendChild(buttonHolderDivEl);
@@ -473,6 +428,7 @@ let drawHighScoresUI = function(nameInput) {
     clearHighScoresButEl.id = "clear-high-scores";
     buttonHolderDivEl.appendChild(goBackButtonButEl);
     buttonHolderDivEl.appendChild(clearHighScoresButEl);
+    //If the game is over change the text from Go Back to New Attempt
     if(gameOver === true) {
         goBackButtonButEl.textContent = "New Attempt"
     }
@@ -481,15 +437,9 @@ let drawHighScoresUI = function(nameInput) {
     }
         clearHighScoresButEl.textContent = "Clear High Scores"
         let savedScores = localStorage.getItem("scores");
-    
+    //If there is no savedScores in localStorage create an empty one
     if (!savedScores) {
         savedScores = [];
-    //   for (let k = 0; k < 5; k++) {
-    //     score = 0;
-    //     let name = "Name";
-    //     const newScore =  {name, score};
-    //     savedScores[k] = (newScore);    
-    //   }
           numOfScores = 0;
     } else {
         savedScores = JSON.parse(savedScores);
@@ -520,7 +470,6 @@ let drawHighScoresUI = function(nameInput) {
         highScore5liEL.textContent = (savedScores[4].name + " " + savedScores[4].score);
     }
     
-   
     currentScreen = "highscores";
     
 }; //end drawHighScoresUI
@@ -531,8 +480,7 @@ let drawHighScoresUI = function(nameInput) {
     args: savedScores   ...scores saved as an object
 */
 let saveHighScores = function(savedScores) {
-    // shows as [object Object]
-    //localStorage.setItem("tasks", tasks);
+   
     localStorage.setItem("scores", JSON.stringify(savedScores));
   }//end saveTasks()
   
@@ -566,9 +514,6 @@ let drawFinalScoreUI = function() {
 
     currentScreen = "final";
 
-   
-    
-
 }
 
 /*  
@@ -579,6 +524,8 @@ let drawFinalScoreUI = function() {
 */
 
 let hideScreen = function(currentScreen) {
+    // checks to see which screen elements need to be hidden
+    // which depends on the currentScreen.
   
     if (currentScreen === "intro") {
         let introButEl = document.querySelector("#start-button");
@@ -618,32 +565,9 @@ let hideScreen = function(currentScreen) {
     }
     else if (currentScreen === "highscores") {
 
-        // Only remove high scores that exist
-       // if(numOfScores = 1) {
-         //   let highScore1liEL = document.getElementById("1-score");
-
-            
-       // }
-
-
-         // add a list for high scores
-        
-        // let highScore2liEL = document.getElementById("2-score");
-        // let highScore3liEL = document.getElementById("3-score");
-        // let highScore4liEL = document.getElementById("4-score");
-        // let highScore5liEL = document.getElementById("5-score");
-
-
         // remove the ordered list and all its children
         let highScoreOlEl = document.querySelector("ol");
         highScoreOlEl.remove(); 
-        // highScoreOlEl.remove(); 
-        // highScore1liEL.remove(); 
-        // highScore2liEL.remove(); 
-        // highScore3liEL.remove();    
-        // highScore4liEL.remove(); 
-        // highScore5liEL.remove(); 
-    
         let buttonHolderDivEl = document.querySelector("#button-holder");
         buttonHolderDivEl.remove(); 
     }
@@ -659,10 +583,14 @@ let hideScreen = function(currentScreen) {
 let buttonHandler = function(event) {
     //Start button was hit.
     //setup HTML for question portion
-    console.log(event.target);
-   
+
+
+    //console.log(event.target);
+
+   // Starts the game
     if (event.target.id === "start-button") {
-        console.log("event.id = start-button");
+
+        //console.log("event.id = start-button");
 
         startTimer = true;
 
@@ -670,27 +598,30 @@ let buttonHandler = function(event) {
         hideScreen("intro");
         drawQuestionUI();
     } 
-    // clicked the submit button to store initials
+    // clicked the submit button to store initials for high score
     else if (event.target.id === "submit") {
 
-        //debugger;
-        
         let nameInputEl = document.querySelector("INPUT").value;
         let score = playerScore;
-       // let name = "";
-        
+      
         let name = nameInputEl;
+        // Lets make the name only 3 initials
+        if (name.length > 3) {
+
+            //trim the name length to 3
+            name = name.substring(0,3);
+
+        }
+        // Put in anonymous if they added no name
         if (name === "")
         { name = "Anonymous"};
         const newScore =  {name, score};
         // add the new info to the array
         let savedScores = localStorage.getItem("scores");
         
-  
-        if (!savedScores) {
+        if (!savedScores) {//no localStorage 
             savedScores = [];
-            //const newScore =  {name, score};
-            //savedScores[0] = (newScore);    
+      
           
         } else {
             savedScores = JSON.parse(savedScores);
@@ -709,13 +640,14 @@ let buttonHandler = function(event) {
 
         // Use localStorage to save high scores and retrieve them
         saveHighScores(savedScores);
-        console.log("Initials: " + nameInputEl);
+        ////////////////////////////////////////////////////////////console.log("Initials: " + nameInputEl);
         // pass the name to the drawHighScoresUI
         hideScreen("final");
         gameOver=true;
         drawHighScoresUI(name);
     
     }
+    // User answered capture event and send it to isCorrect and then disable buttons to stop clicks
     else if ((event.target.id ==="ans1")|| (event.target.id ==="ans2")||(event.target.id ==="ans3")||(event.target.id ==="ans4")) {
        
         isCorrect(event);
@@ -728,18 +660,16 @@ let buttonHandler = function(event) {
         document.querySelector("#ans4").disabled = true;
     
     }
+    
     else if (event.target.id === "go-back") {
-        console.log("Go back clicked!!!!");
+       //////////////////////////////////////////////////////////////////// console.log("Go back clicked!!!!");
         // we hit go back...what was the last page
         //if it was high score restart
         // otherwise go back to lastPage
 
         if(lastScreen === "question") {
             // since we are asking questions turn on the timer again
-            //debug
             pauseTimer = false;
-           // toggleTimer();
-           // startTimer = true;
             hideScreen("highscores");
             drawQuestionUI();
             
@@ -761,46 +691,18 @@ let buttonHandler = function(event) {
         
     }
     else if (event.target.id === "clear-high-scores") {
-        console.log("ClearHighScores!!!!!!");
+      ///////////////////////////////////////////////////  console.log("ClearHighScores!!!!!!");
         savedScores = [];
-
-        // let savedScores = localStorage.getItem("scores");
-        // savedScores = JSON.parse(savedScores);
-        // // lets put in dummy scores since they cleared scores.
-        //     for (let k = 0; k < 5; k++) {
-        //        score = "";
-        //        name = "";
-        //         const newScore =  {name, score};
-        //         savedScores[k] = (newScore);
-        //     }
         localStorage.setItem("scores", JSON.stringify(savedScores));
         hideScreen("highscores");
         drawHighScoresUI();
-             
-        // let highScore1liEL = document.getElementById("1-score");
-        // let highScore2liEL = document.getElementById("2-score");
-        // let highScore3liEL = document.getElementById("3-score");
-        // let highScore4liEL = document.getElementById("4-score");
-        // let highScore5liEL = document.getElementById("5-score");
-               
-        //  highScore1liEL.hidden = true;
-        //  highScore2liEL.hidden = true;
-        //  highScore3liEL.hidden = true;
-        //  highScore4liEL.hidden = true;
-        //  highScore5liEL.hidden = true;
-       // let highScoreOlEl = document.querySelector("ol");
-       // highScoreOlEl.remove(); 
-    
+   
     }
+    // If they click View High Score stop everything and show it.
     else if (event.target.id === "high-score-title") {
   
-        console.log(event.target);
-        console.log("high score clicked");
         // pause time while in high score screen
-        //DEBUG
         pauseTimer = true;
-       // toggleTimer();
-        //startTimer = false;
         lastScreen = currentScreen;
         hideScreen(currentScreen);
 
