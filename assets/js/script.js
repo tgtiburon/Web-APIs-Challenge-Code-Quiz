@@ -125,9 +125,11 @@ let totalQuestions = questionObjArr.length;
 */
 
   let toggleTimer = function() {
+    
     if (startTimer === true ) {
         //startTimer = true;
         let countDown = function() {
+            
           
             if (pauseTimer === false) {
                 timeLeft = timeLeft -1;
@@ -572,8 +574,10 @@ let buttonHandler = function(event) {
 
    // Starts the game
     if (event.target.id === "start-button") {
+   
 
         startTimer = true;
+        pauseTimer = false;
 
         toggleTimer();
         hideScreen("intro");
@@ -646,6 +650,7 @@ let buttonHandler = function(event) {
         // we hit go back...what was the last page
         //if it was high score restart
         // otherwise go back to lastPage
+     
 
         if(lastScreen === "question") {
             // since we are asking questions turn on the timer again
