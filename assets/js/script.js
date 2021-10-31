@@ -22,6 +22,8 @@ let isScoreSaved = false;
 
 let pauseTimer = false;
 
+let numOfScores = 0;
+
 // HACK
 //let timerID = setInterval(function() {toggleTimer();}, 1000);
 //clearInterval(timerID);
@@ -129,9 +131,9 @@ let questionObjArr = [
 let totalQuestions = questionObjArr.length;
 
 // Debug stuff
-timeLeft = 10;
+timeLeft = 19;
 
-totalQuestions = 3;
+totalQuestions = 2;
 
 
 // Functions
@@ -161,6 +163,9 @@ totalQuestions = 3;
                 clearInterval(timerID);
                 timerID = null;
                 //hideScreen(currentScreen);
+                let timerH2El = document.querySelector(".time-left");
+                timerH2El.textContent = "Final Score: " + playerScore;
+                
                 drawFinalScoreUI ();       
             }
         }
@@ -452,11 +457,11 @@ let drawHighScoresUI = function(nameInput) {
     highScore5liEL.id = "5-score";
     
     gameDivEl.appendChild(highScoreOlEl);
-    highScoreOlEl.appendChild(highScore1liEL);
-    highScoreOlEl.appendChild(highScore2liEL);
-    highScoreOlEl.appendChild(highScore3liEL);
-    highScoreOlEl.appendChild(highScore4liEL);
-    highScoreOlEl.appendChild(highScore5liEL);
+    // highScoreOlEl.appendChild(highScore1liEL);
+    // highScoreOlEl.appendChild(highScore2liEL);
+    // highScoreOlEl.appendChild(highScore3liEL);
+    // highScoreOlEl.appendChild(highScore4liEL);
+    // highScoreOlEl.appendChild(highScore5liEL);
 
     let buttonHolderDivEl = document.createElement("div");
     buttonHolderDivEl.id = "button-holder";
@@ -476,27 +481,46 @@ let drawHighScoresUI = function(nameInput) {
     }
         clearHighScoresButEl.textContent = "Clear High Scores"
         let savedScores = localStorage.getItem("scores");
-  
+    
     if (!savedScores) {
         savedScores = [];
-      for (let k = 0; k < 5; k++) {
-        score = 0;
-        let name = "Name";
-        const newScore =  {name, score};
-        savedScores[k] = (newScore);    
-      }
+    //   for (let k = 0; k < 5; k++) {
+    //     score = 0;
+    //     let name = "Name";
+    //     const newScore =  {name, score};
+    //     savedScores[k] = (newScore);    
+    //   }
+          numOfScores = 0;
     } else {
         savedScores = JSON.parse(savedScores);
+         numOfScores = savedScores.length;
 
     }
+    // only show high scores that exist
+    if(numOfScores  > 0){   
+        highScoreOlEl.appendChild(highScore1liEL);
+        highScore1liEL.textContent = (savedScores[0].name + " " + savedScores[0].score);
+    }
+    if(numOfScores > 1) {
+        highScoreOlEl.appendChild(highScore2liEL);
+        highScore2liEL.textContent = (savedScores[1].name + " " + savedScores[1].score);
+    }
+    if(numOfScores > 2) {
+        highScoreOlEl.appendChild(highScore3liEL);
+       
+        highScore3liEL.textContent = (savedScores[2].name + " " + savedScores[2].score);
+    }
+    if(numOfScores > 3) {
+        highScoreOlEl.appendChild(highScore4liEL);     
+        highScore4liEL.textContent = (savedScores[3].name + " " + savedScores[3].score);
 
-    // print the high scores
-    highScore1liEL.textContent = (savedScores[0].name + " " + savedScores[0].score);
-    highScore2liEL.textContent = (savedScores[1].name + " " + savedScores[1].score);
-    highScore3liEL.textContent = (savedScores[2].name + " " + savedScores[2].score);
-    highScore4liEL.textContent = (savedScores[3].name + " " + savedScores[3].score);
-    highScore5liEL.textContent = (savedScores[4].name + " " + savedScores[4].score);
-
+    }
+    if(numOfScores > 4) {
+        highScoreOlEl.appendChild(highScore5liEL);
+        highScore5liEL.textContent = (savedScores[4].name + " " + savedScores[4].score);
+    }
+    
+   
     currentScreen = "highscores";
     
 }; //end drawHighScoresUI
@@ -594,22 +618,31 @@ let hideScreen = function(currentScreen) {
     }
     else if (currentScreen === "highscores") {
 
+        // Only remove high scores that exist
+       // if(numOfScores = 1) {
+         //   let highScore1liEL = document.getElementById("1-score");
+
+            
+       // }
+
 
          // add a list for high scores
-        let highScore1liEL = document.getElementById("1-score");
-        let highScore2liEL = document.getElementById("2-score");
-        let highScore3liEL = document.getElementById("3-score");
-        let highScore4liEL = document.getElementById("4-score");
-        let highScore5liEL = document.getElementById("5-score");
         
+        // let highScore2liEL = document.getElementById("2-score");
+        // let highScore3liEL = document.getElementById("3-score");
+        // let highScore4liEL = document.getElementById("4-score");
+        // let highScore5liEL = document.getElementById("5-score");
+
+
+        // remove the ordered list and all its children
         let highScoreOlEl = document.querySelector("ol");
         highScoreOlEl.remove(); 
-        highScoreOlEl.remove(); 
-        highScore1liEL.remove(); 
-        highScore2liEL.remove(); 
-        highScore3liEL.remove();    
-        highScore4liEL.remove(); 
-        highScore5liEL.remove(); 
+        // highScoreOlEl.remove(); 
+        // highScore1liEL.remove(); 
+        // highScore2liEL.remove(); 
+        // highScore3liEL.remove();    
+        // highScore4liEL.remove(); 
+        // highScore5liEL.remove(); 
     
         let buttonHolderDivEl = document.querySelector("#button-holder");
         buttonHolderDivEl.remove(); 
@@ -643,33 +676,36 @@ let buttonHandler = function(event) {
         //debugger;
         
         let nameInputEl = document.querySelector("INPUT").value;
-        let score = timeLeft;
-        let name = "";
-        name = nameInputEl;
+        let score = playerScore;
+       // let name = "";
+        
+        let name = nameInputEl;
         if (name === "")
-        { name = "Name"};
+        { name = "Anonymous"};
         const newScore =  {name, score};
         // add the new info to the array
         let savedScores = localStorage.getItem("scores");
+        
   
         if (!savedScores) {
             savedScores = [];
-          for (let k = 0; k < 5; k++) {
-            score = 0;
-    
-            let name = "Name";
-            const newScore =  {name, score};
-            savedScores[k] = (newScore);    
-          }
+            //const newScore =  {name, score};
+            //savedScores[0] = (newScore);    
+          
         } else {
             savedScores = JSON.parse(savedScores);
     
         }
-        savedScores[5] = (newScore);
+        let numOfScores = savedScores.length;
+
+        // add newscore to the end of the array
+        savedScores[numOfScores] = (newScore);
+        numOfScores ++;
         // lets sort the array
         savedScores.sort((firstItem, secondItem) =>  secondItem.score - firstItem.score);
-        // now set the list back down to 5 members
-        savedScores.splice(5);
+        // now set the list back down to a max of 5
+        if(numOfScores >5) {numOfScores = 5};
+        savedScores.splice(numOfScores);
 
         // Use localStorage to save high scores and retrieve them
         saveHighScores(savedScores);
@@ -726,28 +762,34 @@ let buttonHandler = function(event) {
     }
     else if (event.target.id === "clear-high-scores") {
         console.log("ClearHighScores!!!!!!");
-        let savedScores = localStorage.getItem("scores");
-        savedScores = JSON.parse(savedScores);
-        // lets put in dummy scores since they cleared scores.
-            for (let k = 0; k < 5; k++) {
-               score = "";
-               name = "";
-                const newScore =  {name, score};
-                savedScores[k] = (newScore);
-            }
-            localStorage.setItem("scores", JSON.stringify(savedScores));
+        savedScores = [];
+
+        // let savedScores = localStorage.getItem("scores");
+        // savedScores = JSON.parse(savedScores);
+        // // lets put in dummy scores since they cleared scores.
+        //     for (let k = 0; k < 5; k++) {
+        //        score = "";
+        //        name = "";
+        //         const newScore =  {name, score};
+        //         savedScores[k] = (newScore);
+        //     }
+        localStorage.setItem("scores", JSON.stringify(savedScores));
+        hideScreen("highscores");
+        drawHighScoresUI();
              
-                let highScore1liEL = document.getElementById("1-score");
-                let highScore2liEL = document.getElementById("2-score");
-                let highScore3liEL = document.getElementById("3-score");
-                let highScore4liEL = document.getElementById("4-score");
-                let highScore5liEL = document.getElementById("5-score");
+        // let highScore1liEL = document.getElementById("1-score");
+        // let highScore2liEL = document.getElementById("2-score");
+        // let highScore3liEL = document.getElementById("3-score");
+        // let highScore4liEL = document.getElementById("4-score");
+        // let highScore5liEL = document.getElementById("5-score");
                
-                highScore1liEL.textContent = "";
-                highScore2liEL.textContent = "";
-                highScore3liEL.textContent = "";
-                highScore4liEL.textContent = "";
-                highScore5liEL.textContent = "";
+        //  highScore1liEL.hidden = true;
+        //  highScore2liEL.hidden = true;
+        //  highScore3liEL.hidden = true;
+        //  highScore4liEL.hidden = true;
+        //  highScore5liEL.hidden = true;
+       // let highScoreOlEl = document.querySelector("ol");
+       // highScoreOlEl.remove(); 
     
     }
     else if (event.target.id === "high-score-title") {

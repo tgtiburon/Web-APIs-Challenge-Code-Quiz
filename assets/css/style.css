@@ -32,6 +32,7 @@ header {
 header h1 {
     /* display:flex; */
     text-align: center;
+    padding: 1%;
     
     
 }
@@ -172,6 +173,7 @@ footer {
             /* display:flex; */
             text-align: center;
             font-size: 7vw;
+            
           
         }
      
