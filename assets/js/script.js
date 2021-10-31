@@ -115,19 +115,6 @@ let questionObjArr = [
 
 let totalQuestions = questionObjArr.length;
 
-// Debug stuff
-//
-//
-//
-
-timeLeft = 300;
-
-totalQuestions = 3;
-
-//
-//
-//
-
 
 // Functions
 
@@ -142,7 +129,6 @@ totalQuestions = 3;
         //startTimer = true;
         let countDown = function() {
           
-           ////////////////////////////////////////////////////////////// console.log("timeLeft= " + timeLeft);
             if (pauseTimer === false) {
                 timeLeft = timeLeft -1;
         
@@ -584,13 +570,8 @@ let buttonHandler = function(event) {
     //Start button was hit.
     //setup HTML for question portion
 
-
-    //console.log(event.target);
-
    // Starts the game
     if (event.target.id === "start-button") {
-
-        //console.log("event.id = start-button");
 
         startTimer = true;
 
@@ -640,7 +621,6 @@ let buttonHandler = function(event) {
 
         // Use localStorage to save high scores and retrieve them
         saveHighScores(savedScores);
-        ////////////////////////////////////////////////////////////console.log("Initials: " + nameInputEl);
         // pass the name to the drawHighScoresUI
         hideScreen("final");
         gameOver=true;
@@ -662,7 +642,7 @@ let buttonHandler = function(event) {
     }
     
     else if (event.target.id === "go-back") {
-       //////////////////////////////////////////////////////////////////// console.log("Go back clicked!!!!");
+   
         // we hit go back...what was the last page
         //if it was high score restart
         // otherwise go back to lastPage
@@ -691,7 +671,6 @@ let buttonHandler = function(event) {
         
     }
     else if (event.target.id === "clear-high-scores") {
-      ///////////////////////////////////////////////////  console.log("ClearHighScores!!!!!!");
         savedScores = [];
         localStorage.setItem("scores", JSON.stringify(savedScores));
         hideScreen("highscores");
